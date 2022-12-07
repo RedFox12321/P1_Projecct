@@ -1,0 +1,20 @@
+Menu:
+
+quantidade de portáteis existentes - ___
+quantidade de portáteis disponíveis - ___
+quantidade total de requisições efetuadas - ___
+quantidade de requisições ativas - ___
+
+
+
+
+submenus:
+
+
+
+
+
+
+funções:
+ ->Inserir e mostrar os dados dos portáteis
+ ->
