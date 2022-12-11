@@ -1,20 +1,70 @@
-Menu:
+____________________ Menu ____________________
 
-quantidade de portáteis existentes - ___
-quantidade de portáteis disponíveis - ___
-quantidade total de requisições efetuadas - ___
-quantidade de requisições ativas - ___
+                Computadores portateis
+    Numero total de portateis - %03d               Numero total de requisicoes efetuadas - %03d
+    Numero de portateis disponiveis - %03d         Numero de requisicoes ativas - %03d
 
+                ____________________________________________
+                
+    P - Portateis
+    R - Reservas
+    F - Ficheiros
+    S - Sair
+        Opcao ->
 
+____________________ Submenus ____________________
 
+___ portáteis ___
 
-submenus:
+                Computadores portateis
+    Numero total de portateis - %03d               Numero total de requisicoes efetuadas - %03d
+    Numero de portateis disponiveis - %03d         Numero de requisicoes ativas - %03d
 
+                ____________________________________________
+                
+    A - Adicionar portatil
+    R - Remover portatil
+    M - Mostrar os dados de todos os portateis
+    V - Voltar
+        Opcao ->
 
+___ reservas ___
 
+                Computadores portateis
+    Numero total de portateis - %03d               Numero total de requisicoes efetuadas - %03d
+    Numero de portateis disponiveis - %03d         Numero de requisicoes ativas - %03d
 
+                ____________________________________________
+                
+    A - Adicionar reserva
+    R - Remover reserva
+    M - Mostrar todas as reservas
+    V - Voltar
+        Opcao ->
+
+___ ficheiros ___
+
+                Computadores portateis
+    Numero total de portateis - %03d               Numero total de requisicoes efetuadas - %03d
+    Numero de portateis disponiveis - %03d         Numero de requisicoes ativas - %03d
+
+                ____________________________________________
+                
+    B - Gravar ficheiro binario
+    T - Gravar ficheiro binario e de texto
+    L - Ler ficheiro binario
+    V - Voltar
+        Opcao ->
 
 
 funções:
  ->Inserir e mostrar os dados dos portáteis
- ->
+ ->Adicionar portateis
+ ->Remover portateis
+ ->Adicionar reservas
+ ->Remover reservas
+ ->Mostrar dados dos portateis
+ ->Mostrar dados das reservas
+ ->Gravar em ficheiro binário
+ ->Gravar em ficheiro binário e criar ficheiro log_texto
+ ->Carregar ficheiro binário 
