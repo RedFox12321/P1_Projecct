@@ -91,6 +91,33 @@ void lerString(char mensagem[MAX_STRING], char vetorCaracteres[MAX_STRING], int 
 
 }
 
+char lerChar(char mensagem[MAX_STRING])
+{
+    char vetorCaracter[2];
+    int tamanhoString;
+
+    do 			// Repete leitura caso seja não seja obtido um caracter ou mais do que um
+    {
+        printf("%s", mensagem);
+        fgets(vetorCaracter, 3, stdin);
+
+        tamanhoString = strlen(vetorCaracter);
+
+        if (vetorCaracter[0] == '\n')
+        {
+            printf("Nao foi introduzido o caracter! Apenas carregou no ENTER \n\n"); // utilizador só carregou no enter
+        }
+        if (vetorCaracter[1] != '\n' && vetorCaracter[0] != '\n')
+        {
+            printf("Foram intruduzidos mais do que um caracter!\n\n"); // limpa buffer
+            limpaBufferStdin();
+        }
+    }
+    while (vetorCaracter[0] == '\n' || (vetorCaracter[1] != '\n' && vetorCaracter[0] != '\n'));
+    vetorCaracter[1] = '\0'; 	//Elimina o \n da string armazenada em vetor
+    return vetorCaracter[0]; //Retorna o valor do caracter obtido
+}
+
 void limpaBufferStdin(void)
 {
     char chr;

@@ -1,8 +1,8 @@
 ____________________ Menu ____________________
 
                 Computadores portateis
-    Numero total de portateis - %03d               Numero total de requisicoes efetuadas - %03d
-    Numero de portateis disponiveis - %03d         Numero de requisicoes ativas - %03d
+    Numero total de portateis - 000               Numero total de requisicoes efetuadas - 000
+    Numero de portateis disponiveis - 000         Numero de requisicoes ativas - 000
 
                 ____________________________________________
                 
@@ -17,8 +17,8 @@ ____________________ Submenus ____________________
 ___ portáteis ___
 
                 Computadores portateis
-    Numero total de portateis - %03d               Numero total de requisicoes efetuadas - %03d
-    Numero de portateis disponiveis - %03d         Numero de requisicoes ativas - %03d
+    Numero total de portateis - 000               Numero total de requisicoes efetuadas - 000
+    Numero de portateis disponiveis - 000         Numero de requisicoes ativas - 000
 
                 ____________________________________________
                 
@@ -31,8 +31,8 @@ ___ portáteis ___
 ___ reservas ___
 
                 Computadores portateis
-    Numero total de portateis - %03d               Numero total de requisicoes efetuadas - %03d
-    Numero de portateis disponiveis - %03d         Numero de requisicoes ativas - %03d
+    Numero total de portateis - 000               Numero total de requisicoes efetuadas - 000
+    Numero de portateis disponiveis - 000         Numero de requisicoes ativas - 000
 
                 ____________________________________________
                 
@@ -45,8 +45,8 @@ ___ reservas ___
 ___ ficheiros ___
 
                 Computadores portateis
-    Numero total de portateis - %03d               Numero total de requisicoes efetuadas - %03d
-    Numero de portateis disponiveis - %03d         Numero de requisicoes ativas - %03d
+    Numero total de portateis - 000               Numero total de requisicoes efetuadas - 000
+    Numero de portateis disponiveis - 000         Numero de requisicoes ativas - 000
 
                 ____________________________________________
                 
@@ -58,13 +58,25 @@ ___ ficheiros ___
 
 
 funções:
- ->Inserir e mostrar os dados dos portáteis
- ->Adicionar portateis
- ->Remover portateis
- ->Adicionar reservas
- ->Remover reservas
- ->Mostrar dados dos portateis
- ->Mostrar dados das reservas
- ->Gravar em ficheiro binário
- ->Gravar em ficheiro binário e criar ficheiro log_texto
- ->Carregar ficheiro binário 
+ M->Mostrar todos os dados
+
+
+ I->Inserir portatil  // Inserir a informação referente a um portatil.
+ A->Alterar dados de um portatil //switch com o dado a trocar
+ R->Remover portatil  // Remover a informação referente a um portatil.
+ D->Adicionar dados sobre a avaria/reparacao de um portatil //Adicionar avaria de um portatil
+ P->Mostrar avarias  //Lista as avarias dos portateis que existem
+ M->Mostrar dados dos portateis //Lista os portateis e todas as suas informacoes
+
+
+ A->Adicionar requisicao // Adicionar uma requisicao de um portatil
+ R->Renovar a requisicao // Aumentar a data final de uma requisicao
+ E->Eliminar requisicao // Remover uma requisicao existente
+ D->Fazer a Devolucao // Mudar o estado de uma requisicao para concluido(0)
+ P->Pesquisar dados sobre uma requisicao // Pesquisar sobre uma requisicao por numero ou nome (not case sensitive)
+ M->Mostrar dados das requisicoes //Lista todas as requisicoes e todas as suas informacoes
+
+
+ B->Gravar em ficheiro binário //grava ficheiro binario em portateis.dat
+ L->Gravar em ficheiro binário e criar ficheiro log_texto //grava ficheiro binario em portateis.dat e cria/recria um log_file/ficheiro texto "portateis.txt"
+ C->Carregar ficheiro binário //carrega ficheiro binario portateis.dat
