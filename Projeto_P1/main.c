@@ -2,7 +2,10 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
-#include "funcoes_portateis.c"
+#include "constantes.h"
+#include "funcoes_portateis.h"
+#include "funcoes_requisicoes.h"
+#include "funcoes_ficheiros.h"
 
 char menu(int numTPE, int numPD, int numTRE, int numRA);
 char menuPortateis(int numTPE, int numPD, int numTRE, int numRA);
@@ -94,15 +97,15 @@ int main()
             switch(opcao)
             {
             case 'b':
-
+                gravarFicheiroBinario(portateis, numPD, numTPE);
                 opcao = 'f';
                 break;
             case 't':
-
+                gravarFicheiroBinario_Log(portateis, numPD, numTPE);
                 opcao = 'f';
                 break;
-            case 'l':
-
+            case 'c':
+                carregarFicheiroBinario(portateis, &numPD, &numTPE);
                 opcao = 'f';
             }
         }
@@ -117,7 +120,7 @@ char menu(int numTPE, int numPD, int numTRE, int numRA)
     char opcao = '\0';
     do
     {
-        printf("\t\t\tComputadores portateis\n"
+        printf("\n\t\t\tComputadores portateis\n"
                "Numero total de portateis - %03d\t\t\t\tNumero total de requisicoes efetuadas - %03d\n"
                "Numero de portateis disponiveis - %03d\t\t\tNumero de requisicoes ativas - %03d\n"
                "\n"
@@ -133,7 +136,7 @@ char menu(int numTPE, int numPD, int numTRE, int numRA)
         tolower(opcao);
         if(opcao != 'p' && opcao != 'r' && opcao != 'f' && opcao != 'm' && opcao != 's')
         {
-            printf("Nao e uma opcao valida\n\n");
+            printf("Nao e uma opcao valida!\n");
         }
     }
     while(opcao != 'p' && opcao != 'r' && opcao != 'f' && opcao != 'm' && opcao != 's');
@@ -145,7 +148,7 @@ char menuPortateis(int numTPE, int numPD, int numTRE, int numRA)
     char opcao = '\0';
     do
     {
-        printf("\t\t\tComputadores portateis\n"
+        printf("\n\t\t\tComputadores portateis\n"
                "Numero total de portateis - %03d\t\t\t\tNumero total de requisicoes efetuadas - %03d\n"
                "Numero de portateis disponiveis - %03d\t\t\tNumero de requisicoes ativas - %03d\n"
                "\n"
@@ -163,7 +166,7 @@ char menuPortateis(int numTPE, int numPD, int numTRE, int numRA)
         tolower(opcao);
         if(opcao != 'i' && opcao != 'a' && opcao != 'd' && opcao != 'r' && opcao != 'm' && opcao != 'p' && opcao != 'v')
         {
-            printf("Nao e uma opcao valida\n\n");
+            printf("Nao e uma opcao valida!\n");
         }
     }
     while(opcao != 'i' && opcao != 'a' && opcao != 'd' && opcao != 'r' && opcao != 'm' && opcao != 'p' && opcao != 'v');
@@ -175,7 +178,7 @@ char menuRequisicoes(int numTPE, int numPD, int numTRE, int numRA)
     char opcao = '\0';
     do
     {
-        printf("\t\t\tComputadores portateis\n"
+        printf("\n\t\t\tComputadores portateis\n"
                "Numero total de portateis - %03d\t\t\t\tNumero total de requisicoes efetuadas - %03d\n"
                "Numero de portateis disponiveis - %03d\t\t\tNumero de requisicoes ativas - %03d\n"
                "\n"
@@ -193,7 +196,7 @@ char menuRequisicoes(int numTPE, int numPD, int numTRE, int numRA)
         tolower(opcao);
         if(opcao != 'a' && opcao != 'r' && opcao != 'e' && opcao != 'd' && opcao != 'p' && opcao != 'm' && opcao != 'v')
         {
-            printf("Nao e uma opcao valida\n\n");
+            printf("Nao e uma opcao valida!\n");
         }
     }
     while(opcao != 'a' && opcao != 'r' && opcao != 'e' && opcao != 'd' && opcao != 'p' && opcao != 'm' && opcao != 'v');
@@ -205,7 +208,7 @@ char menuFicheiro(int numTPE, int numPD, int numTRE, int numRA)
     char opcao = '\0';
     do
     {
-        printf("\t\t\tComputadores portateis\n"
+        printf("\n\t\t\tComputadores portateis\n"
                "Numero total de portateis - %03d\t\t\t\tNumero total de requisicoes efetuadas - %03d\n"
                "Numero de portateis disponiveis - %03d\t\t\tNumero de requisicoes ativas - %03d\n"
                "\n"
@@ -213,17 +216,17 @@ char menuFicheiro(int numTPE, int numPD, int numTRE, int numRA)
                "\n"
                "B - Gravar ficheiro binario\n"
                "T - Gravar ficheiro binario e de texto\n"
-               "L - Ler ficheiro binario\n"
+               "C - Carregar ficheiro binario\n"
                "V - Voltar\n"
                , numTPE, numTRE, numPD, numRA);
         opcao = lerChar("\tOpcao -> ");
         tolower(opcao);
-        if(opcao != 'b' && opcao != 't' && opcao != 'l' && opcao != 'v')
+        if(opcao != 'b' && opcao != 't' && opcao != 'c' && opcao != 'v')
         {
-            printf("Nao e uma opcao valida\n\n");
+            printf("Nao e uma opcao valida!\n");
         }
     }
-    while(opcao != 'b' && opcao != 't' && opcao != 'l' && opcao != 'v');
+    while(opcao != 'b' && opcao != 't' && opcao != 'c' && opcao != 'v');
     return opcao;
 }
 

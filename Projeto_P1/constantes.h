@@ -14,6 +14,7 @@
 #define MAX_ESTADO 9
 #define ESTADO_R "reparado"
 #define ESTADO_A "avariado"
+#define MAX_VALOR_PORTATIL 2000.0
 //constantes para funcoes_reservas
 #define MAX_NAME_CHARACTERS 80
 #define MAX_CODIGO 10
@@ -32,7 +33,7 @@ typedef struct{
     data dataRequisicao; //data da requisicao
     data dataDevolucao; //data da devolucao
     int estado; //concluida = 0; ativa = 1;
-
+    float multa; //valor da multa a pagar
 } dadosRequisisao;
 
 typedef struct{
@@ -44,11 +45,11 @@ typedef struct{
     int nIdentif; //numero de indentificacao do portatil
     char SerialNum[MAX_SERIAL_NUMBER]; // designacao do computador, como numero de serie
     char CPU[MAX_CPU_MODEL]; //nome do processador
-    int RAM; //memória total do portatil(valor entre 1GB e 64GB)
+    int RAM; //memï¿½ria total do portatil(valor entre 1GB e 64GB)
     estadoPortatil estado; //estado do portatil, como tambem o tipo de avaria;
     char localizacao[MAX_LOCALIZACAO]; //localizacao onde foi adicionado
     data dataAquisicao; //data de aquisicao do portatil
-    float multa; //valor da multa a pagar
+    float valor; //valor da multa a pagar
 } dadosPortatil;
 
 #endif // CONSTANTES_H_INCLUDED
