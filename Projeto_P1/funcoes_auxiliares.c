@@ -1,7 +1,52 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include "funcoes_auxiliares.h"
+#include "constantes.h"
+
+//procura item ativo no arrayAvarias a partir do numero de identificacao de um portatil
+int procuraAvaria(dadosAvaria arrayAvarias[], int numAvarias, int numIdentif)
+{
+    int i, pos;
+    for(i=0;i<numAvarias;i++)
+    {
+        if(arrayAvarias[i].dataPortatil.nIdentif==numIdentif && arrayAvarias[i].avaria.estado==1)
+        {
+           pos=i;
+           i=numAvarias;
+        }
+    }
+    return pos;
+}
+
+//pede e retorna a posicao de um portatil
+int pedirPosicao(dadosPortatil arrayPortateis[MAX_PORTATEIS], int numPortateis)
+{
+    int pos;
+    mostrarDadosPortateis(arrayPortateis, numPortateis);
+    do
+    {
+        pos = lerInteiro("\nIndique o numero do portatil", 1, numPortateis);
+        pos = procuraPortatil(arrayPortateis, numPortateis, pos);
+        if(pos==-1)
+        {
+            printf("Nao existe portatil com esse numero de identificacao.\n");
+        }
+    }
+    while(pos==-1);
+    return pos;
+}
+
+//procura um portatil a partir do numero de identificacao
+int procuraPortatil(dadosPortatil arrayPortateis[MAX_PORTATEIS], int numPortateis, int numIdentif)
+{
+    int i, pos=-1;
+    for(i=0;i<numPortateis;i++)
+    {
+        if(arrayPortateis[i].dataPortatil.nIdentif == numIdentif)
+        {
+           pos=i;
+           i=numPortateis;
+        }
+    }
+    return pos;
+}
 
 //transforma uma string em tudo maiuscula ou minuscula
 void toUpperLower(char string[], int upper1_lower0) //upper = 1; lower = 0
@@ -22,14 +67,33 @@ void toUpperLower(char string[], int upper1_lower0) //upper = 1; lower = 0
         }
     }
 }
+
+//conta os dias entre duas datas
+int contarData(data dataInicial, data dataFinal, int somaDias)
+{
+    int totalDias, totalDiasI, totalDiasF; //dias totais da data inicial(totalDiasI) e da data final(totalDIasF) desde a data juliana modificada em constantes.h;
+                    //ano atual-ano considerado * 365 dias    // - um ano se for mes 1 ou 2 // + um ano por cada ano bissesto             // + dias * meses do ano    // + dias passados -1 (o mes começa no dia 1 não no dia 0)
+    totalDiasI = dataInicial.dia + somaDias - 2483618 + 1461*( dataInicial.ano + 4800 + ( dataInicial.mes - 14 ) / 12 ) / 4 + 367*( dataInicial.mes - 2 - ( dataInicial.mes - 14 ) / 12 * 12 ) / 12 - 3*( ( dataInicial.ano + 4900 + ( dataInicial.mes - 14 ) / 12 ) / 100 ) / 4;
+    totalDiasF = dataFinal.dia - 2483618 + 1461*( dataFinal.ano + 4800 + ( dataFinal.mes - 14 ) / 12 ) / 4 + 367*( dataFinal.mes - 2 - ( dataFinal.mes - 14 ) / 12 * 12 ) / 12 - 3*( ( dataFinal.ano + 4900 + ( dataFinal.mes - 14 ) / 12 ) / 100 ) / 4;
+    totalDias = totalDiasF-totalDiasI;
+    return totalDias;
+}
+
 //pede uma data ao utilizador e devolve uma estrutura "data"
-data pedirData(char mensagem[MAX_STRING])
+data pedirData(char mensagem[MAX_STRING], int min_ano, int min_mes, int min_dia)
 {
     int max_dias=31;
     data dataPedida;
     printf("%s\n", mensagem);
-    dataPedida.ano = lerInteiro("Ano", MIN_ANO, MAX_ANO); //pede ano
-    dataPedida.mes = lerInteiro("Mes",1, 12); //pede mes
+    dataPedida.ano = lerInteiro("Ano", min_ano, MAX_ANO); //pede ano
+    if(dataPedida.ano == min_ano)
+    {
+        dataPedida.mes = lerInteiro("Mes", min_mes, 12); //pede mes com min_mes
+    }
+    else
+    {
+        dataPedida.mes = lerInteiro("Mes", 1, 12); //pede mes sem min_mes
+    }
     switch(dataPedida.mes)
     {
         case 2:
@@ -48,7 +112,15 @@ data pedirData(char mensagem[MAX_STRING])
         case 11:
             max_dias = 30;
     }
-    dataPedida.dia = lerInteiro("Dia",1,max_dias); //pede o dia consuante o mes/ano
+    if(dataPedida.mes == min_mes && dataPedida.ano == min_ano)
+    {
+        dataPedida.dia = lerInteiro("Dia", min_dia, max_dias); //pede o dia consuante o mes/ano com min_dia
+    }
+    else
+    {
+        dataPedida.dia = lerInteiro("Dia", 1, max_dias); //pede o dia consuante o mes/ano sem min_dia
+    }
+
     return dataPedida; //Retorna a estrutura data obtida
 }
 

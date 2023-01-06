@@ -4,83 +4,116 @@
 #include <string.h>
 #include "constantes.h"
 #include "funcoes_portateis.h"
+#include "funcoes_avarias.h"
 #include "funcoes_requisicoes.h"
 #include "funcoes_ficheiros.h"
+#include "funcoes_informacoes.h"
 
 char menu(int numTPE, int numPD, int numTRE, int numRA);
 char menuPortateis(int numTPE, int numPD, int numTRE, int numRA);
+char menuAvarias(int numTPE, int numPD, int numTRE, int numRA);
 char menuRequisicoes(int numTPE, int numPD, int numTRE, int numRA);
 char menuFicheiro(int numTPE, int numPD, int numTRE, int numRA);
+char menuInformacoes(int numTPE, int numPD, int numTRE, int numRA);
 
 int main()
 {
-    int
+    data dataI;
+    int temp,
     numTPE=0, //Total de Portateis Existentes
     numPD=0, //Portateis Disponiveis
     numTRE=0, //Total de Requisicoes Efetuadas
-    numRA=0; //Requisicoes ativas
+    numRA=0, //Requisicoes ativas
+    numTA=0; //Total de avarias
     dadosPortatil portateis[MAX_PORTATEIS];
     dadosRequisisao *requisicoes;
+    dadosAvaria *avarias;
     requisicoes = NULL;
+    avarias = NULL;
     char opcao='v'; //inicializar no menu
     do
     {
         switch(opcao)
         {
-        case 'v': //Menu principal
+        case 'v':                                                   //Menu principal
             opcao = menu(numTPE, numPD, numTRE, numRA);
-            if(opcao == 'm')
-            {
-
-                opcao = 'v';
-            }
             break;
-        case 'p': //Submenu da parte dos portateis
+        case 'p':                                                   //Submenu da parte dos portateis
             opcao = menuPortateis(numTPE, numPD, numTRE, numRA);
             switch(opcao)
             {
             case 'i':
-                adicionarPortatil(portateis, &numPD, &numTPE);
+                if(numTPE == MAX_PORTATEIS)
+                {
+                    printf("\nChegou ao limite maximo de portatateis.\n");
+                }
+                else
+                {
+                    adicionarPortatil(portateis, &numTPE);
+                    numPD++;
+                }
                 opcao = 'p';
                 break;
             case 'a':
-
-                opcao = 'p';
-                break;
-            case 'r':
-
-                opcao = 'p';
-                break;
-            case 'd':
-
-                opcao = 'p';
-                break;
-            case 'p':
-
+                if(numTPE==0)
+                {
+                    printf("\nNao existem portateis para alterar.\n");
+                }
+                else
+                {
+                    alterarDadosPortatil(portateis, numTPE);
+                }
                 opcao = 'p';
                 break;
             case 'm':
-                mostrarDadosPortateis(portateis, numPD);
+                if(numTPE==0)
+                {
+                    printf("\nAinda nao existem dados de portateis.\n");
+                }
+                else
+                {
+                    mostrarDadosPortateis(portateis, numTPE);
+                }
                 opcao = 'p';
             }
             break;
-        case 'r': //Submenu da parte das reservas
+        case 'a':                                                   //Submenu da parte das avarias
+            opcao = menuAvarias(numTPE, numPD, numTRE, numRA);
+            switch(opcao)
+            {
+            case 't':
+                if(numTPE==0)
+                {
+                    printf("\nNao existem portateis para trocar o estado.\n");
+                }
+                else
+                {
+                    avarias = trocarAvaria(portateis, numTPE, avarias, &numTA, &numPD);
+                }
+                opcao = 'a';
+                break;
+            case 'm':
+                if(numTA==0)
+                {
+                    printf("\nAinda nao foi registada nenhuma avaria.\n");
+                }
+                else
+                {
+                    mostrarAvarias(portateis, avarias, numTA, numTPE);
+                }
+                opcao = 'a';
+            }
+            break;
+        case 'r':                                                   //Submenu da parte das reservas
             opcao = menuRequisicoes(numTPE, numPD, numTRE, numRA);
             switch(opcao)
             {
             case 'a':
 
-                numTRE++;
-                numRA++;
                 opcao = 'r';
                 break;
             case 'r':
 
-                opcao = 'r';
-                break;
-            case 'e':
-
-                numRA--;
                 opcao = 'r';
                 break;
             case 'p':
@@ -92,26 +125,84 @@ int main()
                 opcao = 'r';
             }
             break;
-        case 'f': //Submenu da parte dos ficheiros
+        case 'f':                                                   //Submenu da parte dos ficheiros
             opcao = menuFicheiro(numTPE, numPD, numTRE, numRA);
             switch(opcao)
             {
             case 'b':
-                gravarFicheiroBinario(portateis, numPD, numTPE);
+                gravarFicheiroBinario(portateis, avarias, requisicoes, numTPE, numPD, numTRE, numRA, numTA);
                 opcao = 'f';
                 break;
             case 't':
-                gravarFicheiroBinario_Log(portateis, numPD, numTPE);
+                gravarFicheiroBinario_Log(portateis, numTPE, numPD);
                 opcao = 'f';
                 break;
             case 'c':
-                carregarFicheiroBinario(portateis, &numPD, &numTPE);
+                carregarFicheiroBinario(portateis, avarias, requisicoes, &avarias, &requisicoes, &numTPE, &numPD, &numTRE, &numRA, &numTA);
                 opcao = 'f';
+            }
+            break;
+        case 'i':                                                   //Submenu
+            opcao = menuInformacoes(numTPE, numPD, numTRE, numRA);
+            switch(opcao)
+            {
+            case 't':
+                if(numTPE==0)
+                {
+                    printf("\nAinda nao existem dados de portateis.\n");
+                }
+                else
+                {
+                    mostrarTudo(portateis, avarias, requisicoes, numTPE, numTA, numTRE);
+                }
+                opcao = 'i';
+                break;
+            case 'd':
+                if(numTPE==0)
+                {
+                    printf("\nAinda nao existem dados de portateis.\n");
+                }
+                else
+                {
+                    mostrarPortatil(portateis, avarias, requisicoes, numTPE, numTA, numTRE);
+                }
+                opcao = 'i';
+                break;
+            case 'p':
+                if(numTPE==0)
+                {
+                    printf("\nAinda nao existem dados de portateis.\n");
+                }
+                else
+                {
+                    mostraProcessadores(portateis, numTPE);
+                }
+                opcao = 'i';
+                break;
+            case 'm':
+                if(numTRE==0)
+                {
+                    printf("\nAinda nao existem requisicoes de portateis.\n");
+                }
+                else
+                {
+                    mediaMulta(requisicoes, numTRE);
+                }
+                opcao = 'i';
+                break;
+            case 'u':
+
+                opcao = 'i';
+                break;
+            case 'r':
+
+                opcao = 'i';
             }
         }
     }
     while(opcao != 's');
     free(requisicoes);
+    free(avarias);
     return 0;
 }
 
@@ -127,19 +218,20 @@ char menu(int numTPE, int numPD, int numTRE, int numRA)
                "\t\t\t____________________________________________\n"
                "\n"
                "P - Portateis\n"
-               "R - Reservas\n"
+               "A - Avarias\n"
+               "R - Requisicoes\n"
                "F - Ficheiros\n"
-               "M - Mostrar todos os dados\n"
+               "I - Informacoes\n"
                "S - Sair\n"
                , numTPE, numTRE, numPD, numRA);
         opcao = lerChar("\tOpcao -> ");
         tolower(opcao);
-        if(opcao != 'p' && opcao != 'r' && opcao != 'f' && opcao != 'm' && opcao != 's')
+        if(opcao != 'p' && opcao != 'a' && opcao != 'r' && opcao != 'f' && opcao != 'i' && opcao != 's')
         {
             printf("Nao e uma opcao valida!\n");
         }
     }
-    while(opcao != 'p' && opcao != 'r' && opcao != 'f' && opcao != 'm' && opcao != 's');
+    while(opcao != 'p' && opcao != 'a' && opcao != 'r' && opcao != 'f' && opcao != 'i' && opcao != 's');
     return opcao;
 }
 
@@ -156,20 +248,42 @@ char menuPortateis(int numTPE, int numPD, int numTRE, int numRA)
                "\n"
                "I - Inserir portatil\n"
                "A - Alterar dados de um portatil\n"
-               "D - Adicionar dados sobre a avaria/reparacao de um portatil\n"
-               "R - Remover portatil\n"
                "M - Mostrar dados dos portateis\n"
-               "P - Mostrar avarias\n"
                "V - Voltar\n"
                , numTPE, numTRE, numPD, numRA);
         opcao = lerChar("\tOpcao -> ");
         tolower(opcao);
-        if(opcao != 'i' && opcao != 'a' && opcao != 'd' && opcao != 'r' && opcao != 'm' && opcao != 'p' && opcao != 'v')
+        if(opcao != 'i' && opcao != 'a' && opcao != 'm' && opcao != 'v')
         {
             printf("Nao e uma opcao valida!\n");
         }
     }
-    while(opcao != 'i' && opcao != 'a' && opcao != 'd' && opcao != 'r' && opcao != 'm' && opcao != 'p' && opcao != 'v');
+    while(opcao != 'i' && opcao != 'a' && opcao != 'm' && opcao != 'v');
+    return opcao;
+}
+
+char menuAvarias(int numTPE, int numPD, int numTRE, int numRA)
+{
+    char opcao = '\0';
+    do
+    {
+        printf("\n\t\t\tComputadores portateis\n"
+               "Numero total de portateis - %03d\t\t\t\tNumero total de requisicoes efetuadas - %03d\n"
+               "Numero de portateis disponiveis - %03d\t\t\tNumero de requisicoes ativas - %03d\n"
+               "\n"
+               "\t\t\t____________________________________________\n"
+               "T - Trocar estado de um portatil\n"
+               "M - Mostrar dados das avarias dos portateis\n"
+               "V - Voltar\n"
+               , numTPE, numTRE, numPD, numRA);
+        opcao = lerChar("\tOpcao -> ");
+        tolower(opcao);
+        if(opcao != 't' && opcao != 'm' && opcao != 'v')
+        {
+            printf("Nao e uma opcao valida!\n");
+        }
+    }
+    while(opcao != 't' && opcao != 'm' && opcao != 'v');
     return opcao;
 }
 
@@ -186,20 +300,19 @@ char menuRequisicoes(int numTPE, int numPD, int numTRE, int numRA)
                "\n"
                "A - Adicionar requisicao\n"
                "R - Renovar a requisicao\n"
-               "E - Eliminar requisicao\n"
-               "D - Fazer a Devolucao\n"
+               "D - Fazer Devolucao\n"
                "P - Pesquisar dados sobre uma requisicao\n"
                "M - Mostrar dados das requisicoes\n"
                "V - Voltar\n"
                , numTPE, numTRE, numPD, numRA);
         opcao = lerChar("\tOpcao -> ");
         tolower(opcao);
-        if(opcao != 'a' && opcao != 'r' && opcao != 'e' && opcao != 'd' && opcao != 'p' && opcao != 'm' && opcao != 'v')
+        if(opcao != 'a' && opcao != 'r' && opcao != 'd' && opcao != 'p' && opcao != 'm' && opcao != 'v')
         {
             printf("Nao e uma opcao valida!\n");
         }
     }
-    while(opcao != 'a' && opcao != 'r' && opcao != 'e' && opcao != 'd' && opcao != 'p' && opcao != 'm' && opcao != 'v');
+    while(opcao != 'a' && opcao != 'r' && opcao != 'd' && opcao != 'p' && opcao != 'm' && opcao != 'v');
     return opcao;
 }
 
@@ -230,3 +343,32 @@ char menuFicheiro(int numTPE, int numPD, int numTRE, int numRA)
     return opcao;
 }
 
+char menuInformacoes(int numTPE, int numPD, int numTRE, int numRA)
+{
+    char opcao = '\0';
+    do
+    {
+        printf("\n\t\t\tComputadores portateis\n"
+               "Numero total de portateis - %03d\t\t\t\tNumero total de requisicoes efetuadas - %03d\n"
+               "Numero de portateis disponiveis - %03d\t\t\tNumero de requisicoes ativas - %03d\n"
+               "\n"
+               "\t\t\t____________________________________________\n"
+               "\n"
+               "T - Mostrar todos os dados existentes\n"
+               "D - Mostrar todos os dados de um portatil\n"
+               "P - Lista de todos os processadores\n"
+               "M - Media das multas pagas\n"
+               "U - Tipo de utente com menos requisicoes\n"
+               "R - Devolucao mais recente\n"
+               "V - Voltar\n"
+               , numTPE, numTRE, numPD, numRA);
+        opcao = lerChar("\tOpcao -> ");
+        tolower(opcao);
+        if(opcao != 't' && opcao != 'd' && opcao != 'p' && opcao != 'm' && opcao != 'u' && opcao != 'r' && opcao != 'v')
+        {
+            printf("Nao e uma opcao valida!\n");
+        }
+    }
+    while(opcao != 't' && opcao != 'd' && opcao != 'p' && opcao != 'm' && opcao != 'u' && opcao != 'r' && opcao != 'v');
+    return opcao;
+}
