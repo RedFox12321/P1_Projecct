@@ -1,9 +1,15 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <stdlib.h>
+#include <string.h>
 #include "constantes.h"
 #include "funcoes_auxiliares.h"
+#include "funcoes_portateis.h"
+#include "funcoes_avarias.h"
 
 dadosAvaria *trocarAvaria(dadosPortatil arrayPortateis[MAX_PORTATEIS], int numPortateis, dadosAvaria arrayAvaria[], int *numAvarias, int *numPD)
 {
-    int pos;
+    int pos, escolhaInt;
     char escolha;
     dadosAvaria *backup;
     backup = arrayAvaria;
@@ -11,21 +17,22 @@ dadosAvaria *trocarAvaria(dadosPortatil arrayPortateis[MAX_PORTATEIS], int numPo
     if(arrayAvaria==NULL)
     {
         arrayAvaria = backup;
-        printf("\nErro ao reservar memoria para adicionar avaria\n");
+        printf("\nErro ao reservar memoria para registar avaria/reparo\n");
     }
     else
     {
-        printf("\nEscolha um portatil para trocar o estado de avaria.");
+        printf("\nEscolha um portatil para registar a avaria/reparo.");
         if(*numAvarias!=0)
         {
             mostrarAvarias(arrayPortateis, arrayAvaria, *numAvarias, numPortateis);
         }
+        mostrarDadosPortateis(arrayPortateis, numPortateis);
         pos = pedirPosicao(arrayPortateis, numPortateis);
         switch(arrayPortateis[pos].estado.estado)
         {
             case 0:                                                             //no caso de estado "disponivel"
-                printf("\nO portatil nao apresenta avaria.\n"
-                       "Pretende mudar o estado deste portatil para avariado?\n");
+                printf("\nO portatil nao apresenta ter avaria.\n"
+                       "Pretende registar o estado deste portatil como avariado?\n");
                 do
                 {
                     escolha = lerChar("\n\tOpcao (S - Sim | N - Nao): ");
@@ -38,25 +45,22 @@ dadosAvaria *trocarAvaria(dadosPortatil arrayPortateis[MAX_PORTATEIS], int numPo
                 while(escolha!='s' && escolha!='n');
                 if(escolha=='s')
                 {
-                    int escolha;
                     arrayAvaria[*numAvarias].dataPortatil = arrayPortateis[pos].dataPortatil;
-                    printf("\nO portatil nao apresenta avaria.\n"
-                           "Que tipo de avaria tem o portatil:\n"
+                    printf("\nQue tipo de avaria tem o portatil:\n"
                            "1 - Temporaria\n"
-                           "2 - Permanente (Nao sera possivel mudar o estado da avaria)\n");
-                    escolha = lerInteiro("\tOpcao", 1, 2);
+                           "2 - Permanente (Nao sera possivel registar o reparo da avaria)\n");
+                    escolhaInt = lerInteiro("\tOpcao", 1, 2);
                     arrayAvaria[*numAvarias].dataAvaria = pedirData("\nIndique quando comecou a avaria.", arrayPortateis[pos].dataPortatil.dataAquisicao.ano, arrayPortateis[pos].dataPortatil.dataAquisicao.mes, arrayPortateis[pos].dataPortatil.dataAquisicao.dia);
 
                     arrayPortateis[pos].estado.estado = 1;
-                    arrayPortateis[pos].estado.avaria = escolha-1;
+                    arrayPortateis[pos].estado.avaria = escolhaInt-1;
                     arrayAvaria[*numAvarias].avaria.estado = 1;
-                    arrayAvaria[*numAvarias].avaria.avaria = escolha-1;
+                    arrayAvaria[*numAvarias].avaria.avaria = escolhaInt-1;
                     arrayAvaria[*numAvarias].diasAvariado=0;
-
                     arrayPortateis[pos].numAvarias++;
                     (*numAvarias)++;
                     (*numPD)--;
-                    printf("\nEstado trocado com sucesso.\n");
+                    printf("\nEstado registado com sucesso.\n");
                 }
                 break;
             case 1:                                                             //no caso de estado "avariado"
@@ -83,16 +87,16 @@ dadosAvaria *trocarAvaria(dadosPortatil arrayPortateis[MAX_PORTATEIS], int numPo
                         arrayAvaria[pos].diasAvariado = contarData(arrayAvaria[pos].dataAvaria, dataAcabaAvaria, 0);
                         arrayAvaria[pos].avaria.estado = 0;
                         (*numPD)++;
-                        printf("\nEstado trocado com sucesso.\n");
+                        printf("\nEstado registado com sucesso.\n");
                     }
                 }
                 else                                                            //permanente
                 {
-                    printf("\nNao da para mudar o estado deste portatil, pois tem uma avaria permanente.\n");
+                    printf("\nNao da para registar a reparacao deste portatil, pois tem uma avaria permanente.\n");
                 }
                 break;
             case -1:                                                            //no caso de estado "requisitado"
-                printf("\nNao e possivel trocar o estado de avaria do portatil, pois esta requisitado.\n");
+                printf("\nNao e possivel registar a avaria/reparo do portatil, pois apresenta estar requisitado.\n");
         }
     }
     return arrayAvaria;
@@ -108,7 +112,7 @@ void mostrarAvarias(dadosPortatil arrayPortateis[MAX_PORTATEIS], dadosAvaria arr
         {
             if(arrayAvarias[n].dataPortatil.nIdentif==arrayPortateis[i].dataPortatil.nIdentif)
             {
-                printf("%5d    %15s\t %14s\t\t%8d GB\t",
+                printf("%5d    %15s\t    Intel i%i\t\t%8d GB\t",
                        arrayAvarias[n].dataPortatil.nIdentif, arrayAvarias[n].dataPortatil.SerialNum, arrayAvarias[n].dataPortatil.CPU, arrayAvarias[n].dataPortatil.RAM);
                 switch(arrayAvarias[n].avaria.avaria)
                 {

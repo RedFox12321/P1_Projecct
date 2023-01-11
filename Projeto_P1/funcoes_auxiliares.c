@@ -1,4 +1,10 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <stdlib.h>
+#include <string.h>
 #include "constantes.h"
+#include "funcoes_auxiliares.h"
+#include "funcoes_portateis.h"
 
 //procura item ativo no arrayAvarias a partir do numero de identificacao de um portatil
 int procuraAvaria(dadosAvaria arrayAvarias[], int numAvarias, int numIdentif)
@@ -19,7 +25,6 @@ int procuraAvaria(dadosAvaria arrayAvarias[], int numAvarias, int numIdentif)
 int pedirPosicao(dadosPortatil arrayPortateis[MAX_PORTATEIS], int numPortateis)
 {
     int pos;
-    mostrarDadosPortateis(arrayPortateis, numPortateis);
     do
     {
         pos = lerInteiro("\nIndique o numero do portatil", 1, numPortateis);

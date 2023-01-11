@@ -1,13 +1,19 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <stdlib.h>
+#include <string.h>
 #include "constantes.h"
 #include "funcoes_auxiliares.h"
+#include "funcoes_portateis.h"
 
 //funcoes principais
 void adicionarPortatil(dadosPortatil arrayPortateis[MAX_PORTATEIS], int *numPortateis)
 {
     arrayPortateis[*numPortateis].dataPortatil.nIdentif = *numPortateis+1;
     lerString("\nIndique o numero de serie(designacao) do portatil: ", arrayPortateis[*numPortateis].dataPortatil.SerialNum, MAX_SERIAL_NUMBER);
-    lerString("Indique o processador(CPU) do portatil: ", arrayPortateis[*numPortateis].dataPortatil.CPU, MAX_CPU_MODEL);
-    toUpperLower(arrayPortateis[*numPortateis].dataPortatil.CPU, 1);
+    printf("Indique o processador(CPU) do portatil:\n");
+    arrayPortateis[*numPortateis].dataPortatil.CPU = lerInteiro("1 - i3\n2 - i5\n3 - i7\nOpcao", 1, 3);
+    arrayPortateis[*numPortateis].dataPortatil.CPU = 1 + 2*arrayPortateis[*numPortateis].dataPortatil.CPU;
     arrayPortateis[*numPortateis].dataPortatil.RAM = lerInteiro("Indique o tamanho da memoria do portatil(RAM) em GB", MIN_RAM, MAX_RAM);
     escolherLocalizacao(arrayPortateis[*numPortateis].dataPortatil.localizacao);
     arrayPortateis[*numPortateis].dataPortatil.dataAquisicao = pedirData("Indique a data de aquisicao deste portatil.", MIN_ANO, 1, 1);
@@ -23,39 +29,45 @@ void alterarDadosPortatil(dadosPortatil arrayPortateis[MAX_PORTATEIS], int numPo
 {
     int pos;
     char campo;
+    mostrarDadosPortateis(arrayPortateis, numPortateis);
     pos = pedirPosicao(arrayPortateis, numPortateis);
-    if(arrayPortateis[pos].estado.estado==1)
+    switch(arrayPortateis[pos].estado.estado)
     {
-        printf("\nNao e possivel alterar dados sobre um portatil com avaria\n");
-    }
-    else
-    {
+    case 0:
         do
-        {
-            campo = menuAlterar();
-            switch(campo)
             {
-            case 'c':
-                lerString("\nIndique o novo numero de serie(designacao) do portatil: ", arrayPortateis[pos].dataPortatil.SerialNum, MAX_SERIAL_NUMBER);
-                break;
-            case 'p':
-                lerString("\nIndique o processador(CPU) do portatil: ", arrayPortateis[pos].dataPortatil.CPU, MAX_CPU_MODEL);
-                toUpperLower(arrayPortateis[pos].dataPortatil.CPU, 1);
-                break;
-            case 'r':
-                arrayPortateis[pos].dataPortatil.RAM = lerInteiro("\nIndique o tamanho da memoria do portatil(RAM) em GB", 1, 64);
-                break;
-            case 'l':
-                escolherLocalizacao(arrayPortateis[pos].dataPortatil.localizacao);
-                break;
-            case 'd':
-                arrayPortateis[pos].dataPortatil.dataAquisicao = pedirData("\nIndique a data de aquisicao deste portatil.", MIN_ANO, 1, 1);
-                break;
-            case 'v':
-                arrayPortateis[pos].dataPortatil.valor = lerFloat("\nIndique o valor do portatil", 0.0, MAX_VALOR_PORTATIL);
+                campo = menuAlterar();
+                switch(campo)
+                {
+                case 'c':
+                    lerString("\nIndique o novo numero de serie(designacao) do portatil: ", arrayPortateis[pos].dataPortatil.SerialNum, MAX_SERIAL_NUMBER);
+                    break;
+                case 'p':
+                    printf("Indique o novo processador(CPU) do portatil:\n");
+                    arrayPortateis[pos].dataPortatil.CPU = lerInteiro("1 - i3\n2 - i5\n3 - i7\nOpcao", 1, 3);
+                    arrayPortateis[pos].dataPortatil.CPU = 1 + 2*arrayPortateis[pos].dataPortatil.CPU;
+                    break;
+                case 'r':
+                    arrayPortateis[pos].dataPortatil.RAM = lerInteiro("\nIndique o tamanho da memoria do portatil(RAM) em GB", 1, 64);
+                    break;
+                case 'l':
+                    escolherLocalizacao(arrayPortateis[pos].dataPortatil.localizacao);
+                    break;
+                case 'd':
+                    arrayPortateis[pos].dataPortatil.dataAquisicao = pedirData("\nIndique a data de aquisicao deste portatil.", MIN_ANO, 1, 1);
+                    break;
+                case 'v':
+                    arrayPortateis[pos].dataPortatil.valor = lerFloat("\nIndique o valor do portatil", 0.0, MAX_VALOR_PORTATIL);
+                }
             }
-        }
-        while(campo!='t');
+            while(campo!='t');
+            break;
+        case 1:
+            printf("\nNao e possivel alterar os dados de um portatil em avaria\n");
+            break;
+        case -1:
+            printf("\nNao e possivel alterar os dados de um portatil requisitado\n");
+            break;
     }
 }
 
@@ -65,7 +77,7 @@ void mostrarDadosPortateis(dadosPortatil arrayPortateis[MAX_PORTATEIS], int numP
     printf("\nNumero   Numero de serie\tProcessador(CPU)\tMemoria(RAM)\tValor do portatil\tLocalizacao\tEstado do portatil\tData de aquisicao:\tDia/Mes/Ano\n");
     for(i=0; i<numPortateis; i++)
     {
-        printf("%5i    %15s\t %14s\t\t%8i GB\t%11.2f Euros\t%11s\t",
+        printf("%5i    %15s\t    Intel i%i\t\t%8i GB\t%11.2f Euros\t%11s\t",
                arrayPortateis[i].dataPortatil.nIdentif, arrayPortateis[i].dataPortatil.SerialNum, arrayPortateis[i].dataPortatil.CPU, arrayPortateis[i].dataPortatil.RAM, arrayPortateis[i].dataPortatil.valor,
                arrayPortateis[i].dataPortatil.localizacao);
         switch(arrayPortateis[i].estado.estado)
@@ -93,8 +105,8 @@ char menuAlterar()
         printf("\nIndique o dado que deseja alterar:\n"
                "\n"
                "C - Numero de Serie\n"
-               "P - Processador\n"
-               "R - RAM\n"
+               "P - Processador(CPU)\n"
+               "R - MEmoria(RAM)\n"
                "L - Localizacao\n"
                "D - Data de Aquisicao\n"
                "V - Valor do Portatil\n"

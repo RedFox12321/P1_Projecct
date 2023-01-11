@@ -5,9 +5,9 @@
 #define MAX_ANO 2025
 #define MODIFIED_JULIAN_YEAR 2000
 #define MAX_STRING 50
+#define NUM_CPU 3
 //constantes para funcoes_portateis
 #define MAX_PORTATEIS 30
-#define MAX_CPU_MODEL 10
 #define MAX_SERIAL_NUMBER 16
 #define MIN_RAM 1
 #define MAX_RAM 64
@@ -16,9 +16,11 @@
 #define ESTADO_R "reparado"
 #define ESTADO_A "avariado"
 #define MAX_VALOR_PORTATIL 5000.00
-//constantes para funcoes_reservas
+//constantes para funcoes_requisicoes
 #define MAX_NAME_CHARACTERS 80
 #define MAX_CODIGO 10
+#define MAX_UTENTE 23
+#define NUM_UTENTES 3
 
 typedef struct{
     int dia;
@@ -34,7 +36,7 @@ typedef struct{
 typedef struct{
     int nIdentif; //numero de indentificacao do portatil
     char SerialNum[MAX_SERIAL_NUMBER]; // designacao do computador, como numero de serie
-    char CPU[MAX_CPU_MODEL]; //nome do processador
+    int CPU; //nome do processador
     int RAM; //mem�ria total do portatil(valor entre 1GB e 64GB)
     char localizacao[MAX_LOCALIZACAO]; //localizacao onde foi adicionado
     data dataAquisicao; //data de aquisicao do portatil
@@ -59,7 +61,7 @@ typedef struct{
     int nIdentif; //numero de indentificacao do portatil
     char codigo[MAX_CODIGO]; //codigo da requisicao
     char nomeUtente[MAX_NAME_CHARACTERS]; //nome do utente que fez a requisicao
-    int tipoUtente; //tipo de utente
+    char tipoUtente[MAX_UTENTE]; //tipo de utente
     data dataRequisicao; //data da requisicao
     data dataDevolucao; //data da devolucao
     int prazo; //prazo da devolucao em dias

@@ -8,5 +8,4 @@ void mostrarDadosPortateis(dadosPortatil arrayPortateis[MAX_PORTATEIS], int numP
 void escolherLocalizacao(char local[MAX_LOCALIZACAO]);
 char menuAlterar();
 
-#include "funcoes_portateis.c"
 #endif // FUNCOES_PORTATEIS_H_INCLUDED

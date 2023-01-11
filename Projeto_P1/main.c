@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "constantes.h"
+#include "funcoes_auxiliares.h"
 #include "funcoes_portateis.h"
 #include "funcoes_avarias.h"
 #include "funcoes_requisicoes.h"
@@ -18,9 +19,7 @@ char menuInformacoes(int numTPE, int numPD, int numTRE, int numRA);
 
 int main()
 {
-    data dataI;
-    int temp,
-    numTPE=0, //Total de Portateis Existentes
+    int numTPE=0, //Total de Portateis Existentes
     numPD=0, //Portateis Disponiveis
     numTRE=0, //Total de Requisicoes Efetuadas
     numRA=0, //Requisicoes ativas
@@ -84,7 +83,7 @@ int main()
             case 't':
                 if(numTPE==0)
                 {
-                    printf("\nNao existem portateis para trocar o estado.\n");
+                    printf("\nNao existem portateis para registar a avaria/reparo.\n");
                 }
                 else
                 {
@@ -109,10 +108,28 @@ int main()
             switch(opcao)
             {
             case 'a':
-
+                if(numTPE==0)
+                {
+                    printf("\nAinda nao existem dados de portateis.\n");
+                }
+                else
+                {
+                    requisicoes = efetuarRequisicao(portateis, numTPE, requisicoes, &numTRE, &numPD, &numRA);
+                }
                 opcao = 'r';
                 break;
             case 'r':
+                if(numTRE==0)
+                {
+                    printf("\nNao existem requisicoes para renovar.\n");
+                }
+                else
+                {
+                    RenovarRequisicao(requisicoes, numTRE);
+                }
+                opcao = 'r';
+                break;
+            case 'd':
 
                 opcao = 'r';
                 break;
@@ -121,7 +138,14 @@ int main()
                 opcao = 'r';
                 break;
             case 'm':
-
+                if(numTRE==0)
+                {
+                    printf("\nNao existem dados de requisicoes ainda.\n");
+                }
+                else
+                {
+                    mostrarDadosRequisicao(requisicoes, numTRE);
+                }
                 opcao = 'r';
             }
             break;
@@ -134,7 +158,7 @@ int main()
                 opcao = 'f';
                 break;
             case 't':
-                gravarFicheiroBinario_Log(portateis, numTPE, numPD);
+                gravarFicheiroBinario_Log(portateis, avarias, requisicoes, numTPE, numPD, numTRE, numRA, numTA);
                 opcao = 'f';
                 break;
             case 'c':
@@ -191,11 +215,25 @@ int main()
                 opcao = 'i';
                 break;
             case 'u':
-
+                if(numTRE==0)
+                {
+                    printf("\nAinda nao existem requisicoes de portateis.\n");
+                }
+                else
+                {
+                    utenteRequisitacoes(requisicoes, numTRE);
+                }
                 opcao = 'i';
                 break;
             case 'r':
-
+                if(numTRE==0)
+                {
+                    printf("\nAinda nao existem requisicoes de portateis.\n");
+                }
+                else
+                {
+                    mostrarRequisicaoRecente(requisicoes, numTRE);
+                }
                 opcao = 'i';
             }
         }
@@ -328,7 +366,7 @@ char menuFicheiro(int numTPE, int numPD, int numTRE, int numRA)
                "\t\t\t____________________________________________\n"
                "\n"
                "B - Gravar ficheiro binario\n"
-               "T - Gravar ficheiro binario e de texto\n"
+               "T - Gravar ficheiro binario (com Data Log)\n"
                "C - Carregar ficheiro binario\n"
                "V - Voltar\n"
                , numTPE, numTRE, numPD, numRA);
@@ -358,7 +396,7 @@ char menuInformacoes(int numTPE, int numPD, int numTRE, int numRA)
                "D - Mostrar todos os dados de um portatil\n"
                "P - Lista de todos os processadores\n"
                "M - Media das multas pagas\n"
-               "U - Tipo de utente com menos requisicoes\n"
+               "U - Dados sobre utentes\n"
                "R - Devolucao mais recente\n"
                "V - Voltar\n"
                , numTPE, numTRE, numPD, numRA);

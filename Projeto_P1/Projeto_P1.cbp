@@ -31,6 +31,32 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="Data_Log.txt" />
+		<Unit filename="constantes.h" />
+		<Unit filename="funcoes_auxiliares.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="funcoes_auxiliares.h" />
+		<Unit filename="funcoes_avarias.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="funcoes_avarias.h" />
+		<Unit filename="funcoes_ficheiros.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="funcoes_ficheiros.h" />
+		<Unit filename="funcoes_informacoes.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="funcoes_informacoes.h" />
+		<Unit filename="funcoes_portateis.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="funcoes_portateis.h" />
+		<Unit filename="funcoes_requisicoes.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="funcoes_requisicoes.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>

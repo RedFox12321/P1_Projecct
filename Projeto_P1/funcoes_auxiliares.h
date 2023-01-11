@@ -14,5 +14,4 @@ int contarData(data dataInicial, data dataFinal, int somaDias);
 char lerChar(char mensagem[MAX_STRING]);
 data pedirData(char mensagem[MAX_STRING], int min_ano, int min_mes, int min_dia);
 
-#include "funcoes_auxiliares.c"
 #endif // FUNCOES_AUXILIARES_H_INCLUDED
