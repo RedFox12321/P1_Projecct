@@ -6,6 +6,103 @@
 #include "funcoes_auxiliares.h"
 #include "funcoes_portateis.h"
 
+void registarRequisicao_Log(dadosRequisicao arrayRequisicoes[], dadosPortatil arrayPortateis[MAX_PORTATEIS], int numRequisicoes, int numPortateis, int posReq)
+{
+    FILE *file;
+    int pos, diasMulta;
+    pos = procuraDevolucao(arrayRequisicoes, numRequisicoes);
+    arrayRequisicoes[posReq].recente = 1;
+    pos = procuraPortatil(arrayPortateis, numPortateis, arrayRequisicoes[posReq].nIdentif);
+    arrayRequisicoes[posReq].estado = 0;
+    arrayPortateis[pos].estado.estado = 0;
+    arrayRequisicoes[posReq].dataDevolucao=pedirData("\nData da Devolucao:",arrayRequisicoes[posReq].dataRequisicao.ano,arrayRequisicoes[posReq].dataRequisicao.mes,arrayRequisicoes[posReq].dataRequisicao.dia);
+    diasMulta = contarData(arrayRequisicoes[posReq].dataRequisicao, arrayRequisicoes[posReq].dataDevolucao, arrayRequisicoes[posReq].prazo);
+    arrayPortateis[pos].diasTotal += contarData(arrayRequisicoes[posReq].dataRequisicao, arrayRequisicoes[posReq].dataDevolucao, 0);
+    if(diasMulta>0)
+    {
+        arrayRequisicoes[posReq].multa=diasMulta*10.0;
+        printf("Portatil devolvido %d dias depois do prazo. O utente %s tem uma multa de %.2f Euros\n", diasMulta, arrayRequisicoes[posReq].nomeUtente, arrayRequisicoes[posReq].multa);
+    }
+    else
+    {
+        printf("Portatil devolvido dentro do prazo. O utente %s nao tem multa para pagar.\n", arrayRequisicoes[posReq].nomeUtente);
+    }
+
+    printf("\nSelecione o local da devolucao:\n");
+    escolherLocalizacao(arrayPortateis[pos].dataPortatil.localizacao);
+
+    file = fopen("Devolucoes_Log.txt", "a");
+    if(file == NULL)
+    {
+        printf("\nErro ao tentar abrir ficheiro \"Devolucoes_Log\"! Nao foi possivel criar um registo da informacao.\n");
+    }
+    else
+    {
+        fprintf(file,
+              "\n\t___Informacoes da Devolucao___\n"
+              "Numero de Identidficacao: %d\n"
+              "Processador(CPU): Intel i%d\n"
+              "Memoria(RAM): %d GB\n"
+              "Codigo: %s\n"
+              "Utente: %s\n"
+              "Nome do utente: %s\n"
+              "Requisitado por: %d dias\n"
+              "Data de requisicao: %02d/%02d/%4d\n"
+              "Data de devolucao: %02d/%02d/%4d\n"
+              "Multa: %.2f Euros\n"
+              "Estado: Devolvido\n",
+               arrayRequisicoes[posReq].nIdentif, arrayPortateis[pos].dataPortatil.CPU, arrayPortateis[pos].dataPortatil.RAM, arrayRequisicoes[posReq].codigo, arrayRequisicoes[posReq].tipoUtente, arrayRequisicoes[posReq].nomeUtente, arrayRequisicoes[posReq].prazo,
+               arrayRequisicoes[posReq].dataRequisicao.dia, arrayRequisicoes[posReq].dataRequisicao.mes, arrayRequisicoes[posReq].dataRequisicao.ano,
+               arrayRequisicoes[posReq].dataDevolucao.dia, arrayRequisicoes[posReq].dataDevolucao.mes, arrayRequisicoes[posReq].dataDevolucao.ano, arrayRequisicoes[posReq].multa);
+        printf("\nRegisto dos dados criado com sucesso.\n");
+    }
+}
+
+int procuraDevolucao(dadosRequisicao arrayRequisicoes[], int numRequisicoes)
+{
+    int i, pos=-1;
+    for(i=0;i<numRequisicoes;i++)
+    {
+        if(arrayRequisicoes[i].recente==1)
+        {
+            pos=i;
+            i=numRequisicoes;
+        }
+    }
+    return pos;
+}
+
+
+//procura se já existe um codigo igual
+int procuraCodigo(dadosRequisicao arrayRequisicoes[], int numRequisicoes, char codigo[MAX_CODIGO])
+{
+    int i, pos=-1;
+    for(i=0; i<numRequisicoes; i++)
+    {
+        if(strcmp(codigo, arrayRequisicoes[i].codigo)==0)
+        {
+            pos=i;
+            i=numRequisicoes;
+        }
+    }
+    return pos;
+}
+
+//procura item ativo no arrayRequisicoes a partir do numero de identificacao de um portatil
+int procuraRequisicao(dadosRequisicao arrayRequisicoes[], int numRequisicoes, int numIdentif)
+{
+    int i, pos;
+    for(i=0; i<numRequisicoes; i++)
+    {
+        if(arrayRequisicoes[pos].nIdentif==numIdentif && arrayRequisicoes[pos].estado==1)
+        {
+            pos=i;
+            i=numRequisicoes;
+        }
+    }
+    return pos;
+}
+
 //procura item ativo no arrayAvarias a partir do numero de identificacao de um portatil
 int procuraAvaria(dadosAvaria arrayAvarias[], int numAvarias, int numIdentif)
 {
@@ -77,7 +174,7 @@ void toUpperLower(char string[], int upper1_lower0) //upper = 1; lower = 0
 int contarData(data dataInicial, data dataFinal, int somaDias)
 {
     int totalDias, totalDiasI, totalDiasF; //dias totais da data inicial(totalDiasI) e da data final(totalDIasF) desde a data juliana modificada em constantes.h;
-                    //ano atual-ano considerado * 365 dias    // - um ano se for mes 1 ou 2 // + um ano por cada ano bissesto             // + dias * meses do ano    // + dias passados -1 (o mes comeÃ§a no dia 1 nÃ£o no dia 0)
+                    //ano atual-ano considerado * 365 dias    // - um ano se for mes 1 ou 2 // + um ano por cada ano bissesto             // + dias * meses do ano    // + dias passados -1 (o mes começa no dia 1 não no dia 0)
     totalDiasI = dataInicial.dia + somaDias - 2483618 + 1461*( dataInicial.ano + 4800 + ( dataInicial.mes - 14 ) / 12 ) / 4 + 367*( dataInicial.mes - 2 - ( dataInicial.mes - 14 ) / 12 * 12 ) / 12 - 3*( ( dataInicial.ano + 4900 + ( dataInicial.mes - 14 ) / 12 ) / 100 ) / 4;
     totalDiasF = dataFinal.dia - 2483618 + 1461*( dataFinal.ano + 4800 + ( dataFinal.mes - 14 ) / 12 ) / 4 + 367*( dataFinal.mes - 2 - ( dataFinal.mes - 14 ) / 12 * 12 ) / 12 - 3*( ( dataFinal.ano + 4900 + ( dataFinal.mes - 14 ) / 12 ) / 100 ) / 4;
     totalDias = totalDiasF-totalDiasI;
@@ -201,7 +298,7 @@ void lerString(char mensagem[MAX_STRING], char vetorCaracteres[MAX_STRING], int 
 
         tamanhoString = strlen(vetorCaracteres);
 
-        if (tamanhoString == 1) // utilizador sÃ³ carregou no enter
+        if (tamanhoString == 1) // utilizador só carregou no enter
         {
             printf("Nao foram introduzidos caracteres! Apenas carregou no ENTER. \n\n");
         }
@@ -233,7 +330,7 @@ char lerChar(char mensagem[MAX_STRING])
 
         tamanhoString = strlen(vetorCaracter);
 
-        if (vetorCaracter[0] == '\n') // utilizador sÃ³ carregou no enter
+        if (vetorCaracter[0] == '\n') // utilizador só carregou no enter
         {
             printf("Nao foi introduzido caracter! Apenas carregou no ENTER. \n\n");
         }

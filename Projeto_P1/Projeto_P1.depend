@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1673430008 source:c:\users\alexa\documents\projetos c\p1_projecct\projeto_p1\main.c
+1673537030 source:c:\users\alexa\documents\projetos c\p1_projecct\projeto_p1\main.c
 	<stdio.h>
 	<ctype.h>
 	<stdlib.h>
@@ -19,43 +19,43 @@
 1673007445 c:\users\alexa\documents\projetos c\p1_projecct\projeto_p1\funcoes_auxiliares.c
 	"constantes.h"
 
-1673118415 c:\users\alexa\documents\projetos c\p1_projecct\projeto_p1\funcoes_auxiliares.h
+1673532898 c:\users\alexa\documents\projetos c\p1_projecct\projeto_p1\funcoes_auxiliares.h
 	"constantes.h"
 
-1673286613 c:\users\alexa\documents\projetos c\p1_projecct\projeto_p1\constantes.h
+1673534912 c:\users\alexa\documents\projetos c\p1_projecct\projeto_p1\constantes.h
 
 1673118431 c:\users\alexa\documents\projetos c\p1_projecct\projeto_p1\funcoes_portateis.h
 	"constantes.h"
 
-1673265653 c:\users\alexa\documents\projetos c\p1_projecct\projeto_p1\funcoes_requisicoes.h
+1673537370 c:\users\alexa\documents\projetos c\p1_projecct\projeto_p1\funcoes_requisicoes.h
 	"constantes.h"
 
 1673013058 c:\users\alexa\documents\projetos c\p1_projecct\projeto_p1\funcoes_requisicoes.c
 	"constantes.h"
 	"funcoes_auxiliares.h"
 
-1673432720 c:\users\alexa\documents\projetos c\p1_projecct\projeto_p1\funcoes_ficheiros.h
+1673463982 c:\users\alexa\documents\projetos c\p1_projecct\projeto_p1\funcoes_ficheiros.h
 	"constantes.h"
 
 1672872198 c:\users\alexa\documents\projetos c\p1_projecct\projeto_p1\funcoes_ficheiros.c
 	"constantes.h"
 	"funcoes_auxiliares.h"
 
-1673118419 c:\users\alexa\documents\projetos c\p1_projecct\projeto_p1\funcoes_avarias.h
+1673486888 c:\users\alexa\documents\projetos c\p1_projecct\projeto_p1\funcoes_avarias.h
 	"constantes.h"
 
 1673011449 c:\users\alexa\documents\projetos c\p1_projecct\projeto_p1\funcoes_avarias.c
 	"constantes.h"
 	"funcoes_auxiliares.h"
 
-1673389988 c:\users\alexa\documents\projetos c\p1_projecct\projeto_p1\funcoes_informacoes.h
+1673527031 c:\users\alexa\documents\projetos c\p1_projecct\projeto_p1\funcoes_informacoes.h
 	"constantes.h"
 
 1672942982 c:\users\alexa\documents\projetos c\p1_projecct\projeto_p1\funcoes_informacoes.c
 	"constantes.h"
 	"funcoes_auxiliares.h"
 
-1673119017 source:c:\users\alexa\documents\projetos c\p1_projecct\projeto_p1\funcoes_auxiliares.c
+1673534962 source:c:\users\alexa\documents\projetos c\p1_projecct\projeto_p1\funcoes_auxiliares.c
 	<stdio.h>
 	<ctype.h>
 	<stdlib.h>
@@ -64,7 +64,7 @@
 	"funcoes_auxiliares.h"
 	"funcoes_portateis.h"
 
-1673264344 source:c:\users\alexa\documents\projetos c\p1_projecct\projeto_p1\funcoes_avarias.c
+1673529908 source:c:\users\alexa\documents\projetos c\p1_projecct\projeto_p1\funcoes_avarias.c
 	<stdio.h>
 	<ctype.h>
 	<stdlib.h>
@@ -72,9 +72,10 @@
 	"constantes.h"
 	"funcoes_auxiliares.h"
 	"funcoes_portateis.h"
+	"funcoes_requisicoes.h"
 	"funcoes_avarias.h"
 
-1673430582 source:c:\users\alexa\documents\projetos c\p1_projecct\projeto_p1\funcoes_ficheiros.c
+1673487549 source:c:\users\alexa\documents\projetos c\p1_projecct\projeto_p1\funcoes_ficheiros.c
 	<stdio.h>
 	<ctype.h>
 	<stdlib.h>
@@ -83,7 +84,7 @@
 	"funcoes_auxiliares.h"
 	"funcoes_ficheiros.h"
 
-1673392871 source:c:\users\alexa\documents\projetos c\p1_projecct\projeto_p1\funcoes_informacoes.c
+1673533444 source:c:\users\alexa\documents\projetos c\p1_projecct\projeto_p1\funcoes_informacoes.c
 	<stdio.h>
 	<ctype.h>
 	<stdlib.h>
@@ -93,7 +94,7 @@
 	"funcoes_portateis.h"
 	"funcoes_informacoes.h"
 
-1673266332 source:c:\users\alexa\documents\projetos c\p1_projecct\projeto_p1\funcoes_portateis.c
+1673469324 source:c:\users\alexa\documents\projetos c\p1_projecct\projeto_p1\funcoes_portateis.c
 	<stdio.h>
 	<ctype.h>
 	<stdlib.h>
@@ -102,7 +103,7 @@
 	"funcoes_auxiliares.h"
 	"funcoes_portateis.h"
 
-1673432305 source:c:\users\alexa\documents\projetos c\p1_projecct\projeto_p1\funcoes_requisicoes.c
+1673534926 source:c:\users\alexa\documents\projetos c\p1_projecct\projeto_p1\funcoes_requisicoes.c
 	<stdio.h>
 	<ctype.h>
 	<stdlib.h>

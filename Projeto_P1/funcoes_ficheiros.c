@@ -6,7 +6,7 @@
 #include "funcoes_auxiliares.h"
 #include "funcoes_ficheiros.h"
 
-void gravarFicheiroBinario(dadosPortatil portateis[MAX_PORTATEIS], dadosAvaria avarias[], dadosRequisisao requisicoes[], int numPortateis, int numPortateisDisp, int numReq, int numReqAtivas, int numAvarias)
+void gravarFicheiroBinario(dadosPortatil portateis[MAX_PORTATEIS], dadosAvaria avarias[], dadosRequisicao requisicoes[], int numPortateis, int numPortateisDisp, int numReq, int numReqAtivas, int numAvarias)
 {
     if(numPortateis==0)
     {
@@ -30,14 +30,14 @@ void gravarFicheiroBinario(dadosPortatil portateis[MAX_PORTATEIS], dadosAvaria a
             fwrite(&numAvarias, sizeof(int), 1, file);
             fwrite(portateis, sizeof(dadosPortatil), numPortateis, file);
             fwrite(avarias, sizeof(dadosAvaria), numAvarias, file);
-            fwrite(requisicoes, sizeof(dadosRequisisao), numReq, file);
+            fwrite(requisicoes, sizeof(dadosRequisicao), numReq, file);
             fclose(file);
             printf("\nDados guardados com sucesso.\n");
         }
     }
 }
 
-void carregarFicheiroBinario(dadosPortatil portateis[MAX_PORTATEIS], dadosAvaria avarias[], dadosRequisisao requisicoes[], dadosAvaria **enderecoAvarias, dadosRequisisao **enderecoRequisicoes, int *numPortateis, int *numPortateisDisp, int *numReq, int *numReqAtivas, int *numAvarias)
+void carregarFicheiroBinario(dadosPortatil portateis[MAX_PORTATEIS], dadosAvaria avarias[], dadosRequisicao requisicoes[], dadosAvaria **enderecoAvarias, dadosRequisicao **enderecoRequisicoes, int *numPortateis, int *numPortateisDisp, int *numReq, int *numReqAtivas, int *numAvarias)
 {
     FILE *file;
 
@@ -64,7 +64,7 @@ void carregarFicheiroBinario(dadosPortatil portateis[MAX_PORTATEIS], dadosAvaria
         {
             fread(avarias, sizeof(dadosAvaria), *numAvarias, file);
         }
-        requisicoes = realloc(requisicoes, (*numReq)*sizeof(dadosRequisisao));
+        requisicoes = realloc(requisicoes, (*numReq)*sizeof(dadosRequisicao));
         if(requisicoes == NULL)
         {
             requisicoes = *enderecoRequisicoes;
@@ -82,9 +82,9 @@ void carregarFicheiroBinario(dadosPortatil portateis[MAX_PORTATEIS], dadosAvaria
 }
 
 
-void gravarFicheiroBinario_Log(dadosPortatil portateis[MAX_PORTATEIS], dadosAvaria avarias[], dadosRequisisao requisicoes[], int numPortateis, int numPortateisDisp, int numReq, int numReqAtivas, int numAvarias)
+void gravarFicheiroBinario_Log(dadosPortatil portateis[MAX_PORTATEIS], dadosAvaria avarias[], dadosRequisicao requisicoes[], int numPortateis, int numPortateisDisp, int numReq, int numReqAtivas, int numAvarias)
 {
-    int i;
+    int i, num;
     gravarFicheiroBinario(portateis, avarias, requisicoes, numPortateis, numPortateisDisp, numReq, numReqAtivas, numAvarias);
     if(numPortateis!=0)
     {
@@ -97,10 +97,11 @@ void gravarFicheiroBinario_Log(dadosPortatil portateis[MAX_PORTATEIS], dadosAvar
         }
         else
         {
-            int i,n,num; //i percorre portateis; n percorre avarias e requisicoes; num é o numero da avaria ou requisicao
+            int i,n,num; //i percorre portateis; n percorre avarias; num Ð¹ o numero da avaria ou requisicao
             for(i=0;i<numPortateis;i++)
             {
-                fprintf(file, "\n\n\t_______Portatil n%d_______\n"
+                fprintf(file,
+                       "\n\n\t_______Portatil n%d_______\n"
                        "Numero de identificacao: %d\n"
                        "Numero de serie: %s\n"
                        "Processador(CPU): Intel i%i\n"
@@ -141,27 +142,35 @@ void gravarFicheiroBinario_Log(dadosPortatil portateis[MAX_PORTATEIS], dadosAvar
                             switch(avarias[n].avaria.avaria)
                             {
                                 case 0:
-                                    fprintf(file, "Temporaria\n");
+                                    fprintf(file, "temporaria\n");
                                     break;
                                 case 1:
-                                    fprintf(file, "Permanente\n");
+                                    fprintf(file, "permanente\n");
                             }
                             num++;
-                            fprintf(file, "\tDados do computador no comeco da avaria:\n"
+                            fprintf(file,
+                                   "\tDados do computador no comeco da avaria:\n"
                                    "\tNumero de identificacao: %d\n"
                                    "\tNumero de serie: %s\n"
                                    "\tProcessador(CPU): Intel i%i\n"
                                    "\tMemoria(RAM): %d GB\n"
                                    "\tLocalizacao atual: %s\n"
                                    "\tData de aquisicao: %02d/%02d/%4d\n"
-                                   "\tValor do portatil: %.2f Euros\n"
-                                   "\tA avaria comecou a %02d/%02d/%4d, ficando avariado durante %d dia(s)\n",
+                                   "\tValor do portatil: %.2f Euros\n",
                                    avarias[n].dataPortatil.nIdentif, avarias[n].dataPortatil.SerialNum, avarias[n].dataPortatil.CPU, avarias[n].dataPortatil.RAM,
                                    avarias[n].dataPortatil.localizacao, avarias[n].dataPortatil.dataAquisicao.dia, avarias[n].dataPortatil.dataAquisicao.mes, avarias[n].dataPortatil.dataAquisicao.ano,
-                                   avarias[n].dataPortatil.valor, avarias[n].dataAvaria.dia, avarias[n].dataAvaria.mes, avarias[n].dataAvaria.ano, avarias[n].diasAvariado);
+                                   avarias[n].dataPortatil.valor);
+                            fprintf(file, "\tA avaria comecou a %02d/%02d/%4d,", avarias[n].dataAvaria.dia, avarias[n].dataAvaria.mes, avarias[n].dataAvaria.ano);
+                            switch(avarias[n].avaria.estado)
+                            {
+                                case 0:
+                                    fprintf(file, " ficando avariado durante %d dia(s).\n", avarias[n].diasAvariado);
+                                    break;
+                                case 1:
+                                    fprintf(file, " estando ainda avariado.\n");
+                            }
                         }
                     }
-
                 }
                 fprintf(file, "\nEncontra-se requisitado: ");
                 if(portateis[i].estado.estado==-1)
@@ -183,24 +192,28 @@ void gravarFicheiroBinario_Log(dadosPortatil portateis[MAX_PORTATEIS], dadosAvar
                 fprintf(file, "Numero total de requisicoes: %d\n", portateis[i].numRequisicoes);
                 if(portateis[i].numRequisicoes!=0)
                 {
+                    fprintf(file, "Numero total de dias requisitado: %d\n", portateis[i].diasTotal);
                     fprintf(file, "\nTodas as requisicoes:\n");
                     num=1;
                     for(n=0;n<numReq;n++)
                     {
                         if(requisicoes[n].nIdentif==portateis[i].dataPortatil.nIdentif)
                         {
-                            fprintf(file, "\n\t\t___Requisicao n%03d___\n"
-                                          "\tCodigo: %s\n"
-                                          "\tUtente: %s\n"
-                                          "\tNome do utente: %s\n"
-                                          "\tData de requisicao: %02d/%02d/%4d\n",
-                                           num , requisicoes[n].codigo, requisicoes[n].tipoUtente, requisicoes[n].nomeUtente,
-                                           requisicoes[n].dataRequisicao.dia, requisicoes[n].dataRequisicao.mes, requisicoes[n].dataRequisicao.ano);
+                            fprintf(file,
+                                    "\n\t\t___Requisicao n%03d___\n"
+                                    "\tCodigo: %s\n"
+                                    "\tUtente: %s\n"
+                                    "\tNome do utente: %s\n"
+                                    "\tData de requisicao: %02d/%02d/%4d\n",
+                                    num, requisicoes[n].codigo, requisicoes[n].tipoUtente, requisicoes[n].nomeUtente,
+                                    requisicoes[n].dataRequisicao.dia, requisicoes[n].dataRequisicao.mes, requisicoes[n].dataRequisicao.ano);
+                            num++;
                             if(requisicoes[n].estado==0)
                             {
-                                printf("\tData de devolucao: %02d/%02d/%4d\n"
-                                       "\tMulta: %.2f Euros\n",
-                                       requisicoes[n].dataDevolucao.dia, requisicoes[n].dataDevolucao.mes, requisicoes[n].dataDevolucao.ano, requisicoes[n].multa);
+                                fprintf(file,
+                                        "\tData de devolucao: %02d/%02d/%4d\n"
+                                        "\tMulta: %.2f Euros\n",
+                                        requisicoes[n].dataDevolucao.dia, requisicoes[n].dataDevolucao.mes, requisicoes[n].dataDevolucao.ano, requisicoes[n].multa);
                             }
                             switch(requisicoes[n].estado)
                             {
@@ -214,7 +227,7 @@ void gravarFicheiroBinario_Log(dadosPortatil portateis[MAX_PORTATEIS], dadosAvar
                     }
                 }
             }
-        }
         printf("\nFicheiro log criado com sucesso\n");
+        }
     }
 }

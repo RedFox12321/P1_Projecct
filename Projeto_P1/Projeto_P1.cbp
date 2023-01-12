@@ -32,6 +32,7 @@
 			<Add option="-Wall" />
 		</Compiler>
 		<Unit filename="Data_Log.txt" />
+		<Unit filename="Devolucoes_Log.txt" />
 		<Unit filename="constantes.h" />
 		<Unit filename="funcoes_auxiliares.c">
 			<Option compilerVar="CC" />
@@ -57,6 +58,7 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="funcoes_requisicoes.h" />
+		<Unit filename="infoPortateis.dat" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>

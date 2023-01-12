@@ -7,7 +7,7 @@
 #include "funcoes_portateis.h"
 #include "funcoes_informacoes.h"
 
-void utenteRequisitacoes(dadosRequisisao arrayRequisicoes[], int numRequisicoes)
+void utenteRequisitacoes(dadosRequisicao arrayRequisicoes[], int numRequisicoes)
 {
     int i, utenteNum[NUM_UTENTES]={0}, min, max;
     for(i=0;i<numRequisicoes;i++)
@@ -81,22 +81,24 @@ void utenteRequisitacoes(dadosRequisisao arrayRequisicoes[], int numRequisicoes)
            utenteNum[0], utenteNum[1], utenteNum[2]);
 }
 
-void mostrarRequisicaoRecente(dadosRequisisao arrayRequisicoes[], int numRequisicoes)
+void mostrarDevolucaoRecente(dadosRequisicao arrayRequisicoes[], int numRequisicoes)
 {
+    int pos;
+    pos = procuraDevolucao(arrayRequisicoes, numRequisicoes);
     printf("\n\t___Requisicao mais recente___\n"
               "Codigo: %s\n"
               "Utente: %s\n"
               "Nome do utente: %s\n"
               "Data de requisicao: %02d/%02d/%4d\n",
-               arrayRequisicoes[numRequisicoes-1].codigo, arrayRequisicoes[numRequisicoes-1].tipoUtente, arrayRequisicoes[numRequisicoes-1].nomeUtente,
-               arrayRequisicoes[numRequisicoes-1].dataRequisicao.dia, arrayRequisicoes[numRequisicoes-1].dataRequisicao.mes, arrayRequisicoes[numRequisicoes-1].dataRequisicao.ano);
-    if(arrayRequisicoes[numRequisicoes-1].estado==0)
+               arrayRequisicoes[pos].codigo, arrayRequisicoes[pos].tipoUtente, arrayRequisicoes[pos].nomeUtente,
+               arrayRequisicoes[pos].dataRequisicao.dia, arrayRequisicoes[pos].dataRequisicao.mes, arrayRequisicoes[pos].dataRequisicao.ano);
+    if(arrayRequisicoes[pos].estado==0)
     {
         printf("Data de devolucao: %02d/%02d/%4d\n"
                "Multa: %.2f Euros\n",
-               arrayRequisicoes[numRequisicoes-1].dataDevolucao.dia, arrayRequisicoes[numRequisicoes-1].dataDevolucao.mes, arrayRequisicoes[numRequisicoes-1].dataDevolucao.ano, arrayRequisicoes[numRequisicoes-1].multa);
+               arrayRequisicoes[pos].dataDevolucao.dia, arrayRequisicoes[pos].dataDevolucao.mes, arrayRequisicoes[pos].dataDevolucao.ano, arrayRequisicoes[pos].multa);
     }
-    switch(arrayRequisicoes[numRequisicoes-1].estado)
+    switch(arrayRequisicoes[pos].estado)
     {
     case 0:
         printf("Estado: Devolvido\n");
@@ -124,13 +126,13 @@ void mostraProcessadores(dadosPortatil arrayPortateis[MAX_PORTATEIS], int numPor
     printf("\nProcessador(CPU)\tQuantidade\tQuantidade(%%)\n");
     for(i=1;i<=NUM_CPU;i++)
     {
-        percent = processNum[i-1]/(float)numPortateis*100;  //numPortateis nunca é zero porque a função só é chamada qunado existe pelo menos 1 portatil
+        percent = processNum[i-1]/(float)numPortateis*100;  //numPortateis nunca Ð¹ zero porque a funÐ·Ð³o sÑƒ Ð¹ chamada qunado existe pelo menos 1 portatil
         printf("    Intel i%i\t\t  %3d    \t   %3.1f %%\n", 1+2*i, processNum[i-1], percent);
     }
     printf("\n          Total: \t  %3d    \t   100.0 %%\n", numPortateis);
 }
 
-void mediaMulta(dadosRequisisao arrayRequisicoes[], int numRequisicoes)
+void mediaMulta(dadosRequisicao arrayRequisicoes[], int numRequisicoes)
 {
     int i;
     float valor=arrayRequisicoes[0].multa,
@@ -159,7 +161,7 @@ void mediaMulta(dadosRequisisao arrayRequisicoes[], int numRequisicoes)
             numRequisicoes, valor, max, min);
 }
 
-void mostrarPortatil(dadosPortatil arrayPortateis[MAX_PORTATEIS], dadosAvaria arrayAvarias[], dadosRequisisao arrayRequisicoes[], int numPortateis, int numAvarias, int numRequisicoes)
+void mostrarPortatil(dadosPortatil arrayPortateis[MAX_PORTATEIS], dadosAvaria arrayAvarias[], dadosRequisicao arrayRequisicoes[], int numPortateis, int numAvarias, int numRequisicoes)
 {
     int i,num,pos;
     mostrarDadosPortateis(arrayPortateis, numPortateis);
@@ -222,7 +224,15 @@ void mostrarPortatil(dadosPortatil arrayPortateis[MAX_PORTATEIS], dadosAvaria ar
                        arrayAvarias[i].dataPortatil.nIdentif, arrayAvarias[i].dataPortatil.SerialNum, arrayAvarias[i].dataPortatil.CPU, arrayAvarias[i].dataPortatil.RAM,
                        arrayAvarias[i].dataPortatil.localizacao, arrayAvarias[i].dataPortatil.dataAquisicao.dia, arrayAvarias[i].dataPortatil.dataAquisicao.mes, arrayAvarias[i].dataPortatil.dataAquisicao.ano,
                        arrayAvarias[i].dataPortatil.valor);
-                printf("\tA avaria comecou a %02d/%02d/%4d, ficando avariado durante %d dia(s)\n", arrayAvarias[i].dataAvaria.dia, arrayAvarias[i].dataAvaria.mes, arrayAvarias[i].dataAvaria.ano, arrayAvarias[i].diasAvariado);
+                printf("\tA avaria comecou a %02d/%02d/%4d,", arrayAvarias[i].dataAvaria.dia, arrayAvarias[i].dataAvaria.mes, arrayAvarias[i].dataAvaria.ano);
+                switch(arrayAvarias[i].avaria.estado)
+                {
+                    case 0:
+                        printf(" ficando avariado durante %d dia(s).\n", arrayAvarias[i].diasAvariado);
+                        break;
+                    case 1:
+                        printf(" estando ainda avariado.\n");
+                }
             }
         }
     }
@@ -246,6 +256,7 @@ void mostrarPortatil(dadosPortatil arrayPortateis[MAX_PORTATEIS], dadosAvaria ar
     printf("Numero total de requisicoes: %d\n", arrayPortateis[pos].numRequisicoes);
     if(arrayPortateis[pos].numRequisicoes!=0)
     {
+        printf("Numero total de dias requisitado: %d\n", arrayPortateis[pos].diasTotal);
         for(i=0;i<numRequisicoes;i++)
         {
             if(arrayRequisicoes[i].nIdentif==arrayPortateis[pos].dataPortatil.nIdentif)
@@ -256,6 +267,7 @@ void mostrarPortatil(dadosPortatil arrayPortateis[MAX_PORTATEIS], dadosAvaria ar
                               "\tData de requisicao: %02d/%02d/%4d\n",
                                num, arrayRequisicoes[i].codigo, arrayRequisicoes[i].tipoUtente, arrayRequisicoes[i].nomeUtente,
                                arrayRequisicoes[i].dataRequisicao.dia, arrayRequisicoes[i].dataRequisicao.mes, arrayRequisicoes[i].dataRequisicao.ano);
+                num++;
                 if(arrayRequisicoes[i].estado==0)
                 {
                     printf("\tData de devolucao: %02d/%02d/%4d\n"
@@ -275,9 +287,9 @@ void mostrarPortatil(dadosPortatil arrayPortateis[MAX_PORTATEIS], dadosAvaria ar
     }
 }
 
-void mostrarTudo(dadosPortatil arrayPortateis[MAX_PORTATEIS], dadosAvaria arrayAvarias[], dadosRequisisao arrayRequisicoes[], int numPortateis, int numAvarias, int numRequisicoes)
+void mostrarTudo(dadosPortatil arrayPortateis[MAX_PORTATEIS], dadosAvaria arrayAvarias[], dadosRequisicao arrayRequisicoes[], int numPortateis, int numAvarias, int numRequisicoes)
 {
-    int i,n,num; //i percorre arrayPortateis; n percorre arrayAvarias; num é o numero da avaria ou requisicao
+    int i,n,num; //i percorre arrayPortateis; n percorre arrayAvarias; num Ð¹ o numero da avaria ou requisicao
     for(i=0;i<numPortateis;i++)
     {
         printf("\n\n\t_______Portatil n%d_______\n"
@@ -338,7 +350,15 @@ void mostrarTudo(dadosPortatil arrayPortateis[MAX_PORTATEIS], dadosAvaria arrayA
                            arrayAvarias[n].dataPortatil.nIdentif, arrayAvarias[n].dataPortatil.SerialNum, arrayAvarias[n].dataPortatil.CPU, arrayAvarias[n].dataPortatil.RAM,
                            arrayAvarias[n].dataPortatil.localizacao, arrayAvarias[n].dataPortatil.dataAquisicao.dia, arrayAvarias[n].dataPortatil.dataAquisicao.mes, arrayAvarias[n].dataPortatil.dataAquisicao.ano,
                            arrayAvarias[n].dataPortatil.valor);
-                    printf("\tA avaria comecou a %02d/%02d/%4d, ficando avariado durante %d dia(s)\n", arrayAvarias[n].dataAvaria.dia, arrayAvarias[n].dataAvaria.mes, arrayAvarias[n].dataAvaria.ano, arrayAvarias[n].diasAvariado);
+                    printf("\tA avaria comecou a %02d/%02d/%4d,", arrayAvarias[n].dataAvaria.dia, arrayAvarias[n].dataAvaria.mes, arrayAvarias[n].dataAvaria.ano);
+                    switch(arrayAvarias[n].avaria.estado)
+                    {
+                        case 0:
+                            printf(" ficando avariado durante %d dia(s).\n", arrayAvarias[n].diasAvariado);
+                            break;
+                        case 1:
+                            printf(" estando ainda avariado.\n");
+                    }
                 }
             }
         }
@@ -362,6 +382,7 @@ void mostrarTudo(dadosPortatil arrayPortateis[MAX_PORTATEIS], dadosAvaria arrayA
         printf("Numero total de requisicoes: %d\n", arrayPortateis[i].numRequisicoes);
         if(arrayPortateis[i].numRequisicoes!=0)
         {
+            printf("Numero total de dias requisitado: %d\n", arrayPortateis[i].diasTotal);
             printf("\nTodas as requisicoes:\n");
             num=1;
             for(n=0;n<numRequisicoes;n++)
@@ -375,6 +396,7 @@ void mostrarTudo(dadosPortatil arrayPortateis[MAX_PORTATEIS], dadosAvaria arrayA
                                   "\tData de requisicao: %02d/%02d/%4d\n",
                                    num, arrayRequisicoes[n].codigo, arrayRequisicoes[n].tipoUtente, arrayRequisicoes[n].nomeUtente,
                                    arrayRequisicoes[n].dataRequisicao.dia, arrayRequisicoes[n].dataRequisicao.mes, arrayRequisicoes[n].dataRequisicao.ano);
+                    num++;
                     if(arrayRequisicoes[n].estado==0)
                     {
                         printf("\tData de devolucao: %02d/%02d/%4d\n"

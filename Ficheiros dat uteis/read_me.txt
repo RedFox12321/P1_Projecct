@@ -9,4 +9,5 @@
  R -> Requisições
 
 #Referencia de data por numeros:
-1 - 5 P sem A ou R;
+1 - 7 P sem A ou R;
+2 - 7 P com 4 A(3 temporarias, 1 permanente) e sem R

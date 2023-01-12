@@ -5,11 +5,12 @@
 #include "constantes.h"
 #include "funcoes_auxiliares.h"
 #include "funcoes_portateis.h"
+#include "funcoes_requisicoes.h"
 #include "funcoes_avarias.h"
 
-dadosAvaria *trocarAvaria(dadosPortatil arrayPortateis[MAX_PORTATEIS], int numPortateis, dadosAvaria arrayAvaria[], int *numAvarias, int *numPD)
+dadosAvaria *trocarAvaria(dadosPortatil arrayPortateis[MAX_PORTATEIS], int numPortateis, dadosAvaria arrayAvaria[], dadosRequisicao arrayRequisicoes[], int numRequisicoes, int *numAvarias, int *numPD)
 {
-    int pos, escolhaInt;
+    int pos, posReq, escolhaInt;
     char escolha;
     dadosAvaria *backup;
     backup = arrayAvaria;
@@ -96,7 +97,40 @@ dadosAvaria *trocarAvaria(dadosPortatil arrayPortateis[MAX_PORTATEIS], int numPo
                 }
                 break;
             case -1:                                                            //no caso de estado "requisitado"
-                printf("\nNao e possivel registar a avaria/reparo do portatil, pois apresenta estar requisitado.\n");
+                printf("\nO portatil apresenta estar requisitado.\n"
+                       "Pretende registar o estado deste portatil como avariado?\n");
+                do
+                {
+                    escolha = lerChar("\n\tOpcao (S - Sim | N - Nao): ");
+                    tolower(escolha);
+                    if(escolha!='s' && escolha!='n')
+                    {
+                        printf("\nOpcao nao existe.\n");
+                    }
+                }
+                while(escolha!='s' && escolha!='n');
+                if(escolha=='s')
+                {
+                    arrayAvaria[*numAvarias].dataPortatil = arrayPortateis[pos].dataPortatil;
+                    printf("\nQue tipo de avaria tem o portatil:\n"
+                           "1 - Temporaria\n"
+                           "2 - Permanente (Nao sera possivel registar o reparo da avaria)\n");
+                    escolhaInt = lerInteiro("\tOpcao", 1, 2);
+                    posReq = procuraRequisicao(arrayRequisicoes, numRequisicoes, arrayRequisicoes[posReq].nIdentif);
+
+                    arrayAvaria[*numAvarias].dataAvaria=arrayRequisicoes[posReq].dataRequisicao;
+                    printf("\nIndique quando foi devolvido o portatil com a avaria.");
+                    registarRequisicao_Log(arrayRequisicoes, arrayPortateis, numRequisicoes, numPortateis, posReq);
+
+                    arrayPortateis[pos].estado.estado = 1;
+                    arrayPortateis[pos].estado.avaria = escolhaInt-1;
+                    arrayAvaria[*numAvarias].avaria.estado = 1;
+                    arrayAvaria[*numAvarias].avaria.avaria = escolhaInt-1;
+                    arrayAvaria[*numAvarias].diasAvariado=0;
+                    arrayPortateis[pos].numAvarias++;
+                    (*numAvarias)++;
+                    printf("\nEstado registado com sucesso.\n");
+                }
         }
     }
     return arrayAvaria;
@@ -105,7 +139,7 @@ dadosAvaria *trocarAvaria(dadosPortatil arrayPortateis[MAX_PORTATEIS], int numPo
 void mostrarAvarias(dadosPortatil arrayPortateis[MAX_PORTATEIS], dadosAvaria arrayAvarias[], int numAvarias, int numPortateis)
 {
     int i,n;
-    printf("\nNumero   Numero de serie\tProcessador(CPU)\tMemoria(RAM)\tTipo de avaria\tQuando comecou: dia/mes/ano\tDias avariado\n");
+    printf("\nNumero   Numero de serie\tProcessador(CPU)\tMemoria(RAM)\tTipo de avaria\t\t Estado \tQuando comecou: dia/mes/ano\tDias avariado\n");
     for(i=0;i<numPortateis;i++)
     {
         for(n=0;n<numAvarias;n++)
@@ -121,6 +155,14 @@ void mostrarAvarias(dadosPortatil arrayPortateis[MAX_PORTATEIS], dadosAvaria arr
                     break;
                 case 1:
                     printf("    permanente\t");
+                }
+                switch(arrayAvarias[n].avaria.estado)
+                {
+                    case 0:
+                        printf("\tReparado\t");
+                        break;
+                    case 1:
+                        printf("\tAvariado\t");
                 }
                 printf("\t\t %02d/%02d/%4d\t%10d\n", arrayAvarias[n].dataAvaria.dia, arrayAvarias[n].dataAvaria.mes, arrayAvarias[n].dataAvaria.ano, arrayAvarias[n].diasAvariado);
             }

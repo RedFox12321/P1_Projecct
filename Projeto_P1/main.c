@@ -25,7 +25,7 @@ int main()
     numRA=0, //Requisicoes ativas
     numTA=0; //Total de avarias
     dadosPortatil portateis[MAX_PORTATEIS];
-    dadosRequisisao *requisicoes;
+    dadosRequisicao *requisicoes;
     dadosAvaria *avarias;
     requisicoes = NULL;
     avarias = NULL;
@@ -87,7 +87,7 @@ int main()
                 }
                 else
                 {
-                    avarias = trocarAvaria(portateis, numTPE, avarias, &numTA, &numPD);
+                    avarias = trocarAvaria(portateis, numTPE, avarias, requisicoes, numTRE, &numTA, &numPD);
                 }
                 opcao = 'a';
                 break;
@@ -114,27 +114,50 @@ int main()
                 }
                 else
                 {
+                    if(numRA==0 && numPD==0)
+                    {
+                        printf("\nTodos os portateis estao avariados, por isso nao e possivel registar uma requisicao.\n");
+                    }
+                    else
+                    {
                     requisicoes = efetuarRequisicao(portateis, numTPE, requisicoes, &numTRE, &numPD, &numRA);
+                    }
                 }
                 opcao = 'r';
                 break;
             case 'r':
-                if(numTRE==0)
+                if(numRA==0)
                 {
                     printf("\nNao existem requisicoes para renovar.\n");
                 }
                 else
                 {
-                    RenovarRequisicao(requisicoes, numTRE);
+                    renovarRequisicao(requisicoes, numTRE);
                 }
                 opcao = 'r';
                 break;
             case 'd':
-
+                if(numRA==0)
+                {
+                    printf("\nNao existem requisicoes para fazer devolucao.\n");
+                }
+                else
+                {
+                    efetuarDevolucao(requisicoes, portateis, numTRE, numTPE);
+                    numRA--;
+                    numPD++;
+                }
                 opcao = 'r';
                 break;
             case 'p':
-
+                if(numTRE==0)
+                {
+                    printf("\nNao existem dados de requisicoes ainda.\n");
+                }
+                else
+                {
+                    pesquisarRequisicao(requisicoes, portateis, numTRE, numTPE);
+                }
                 opcao = 'r';
                 break;
             case 'm':
@@ -226,13 +249,13 @@ int main()
                 opcao = 'i';
                 break;
             case 'r':
-                if(numTRE==0)
+                if(numRA>=numTRE)
                 {
-                    printf("\nAinda nao existem requisicoes de portateis.\n");
+                    printf("\nAinda nao existem devolucoes de portateis.\n");
                 }
                 else
                 {
-                    mostrarRequisicaoRecente(requisicoes, numTRE);
+                    mostrarDevolucaoRecente(requisicoes, numTRE);
                 }
                 opcao = 'i';
             }

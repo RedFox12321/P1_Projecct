@@ -1,26 +1,3 @@
-
-.       ////////////////////////////////////////////////////
-Menu:
-                         Computadores portateis
- Numero total de portateis - 000                         Numero total de requisicoes efetuadas - 000
- Numero de portateis disponiveis - 000                   Numero de requisicoes ativas - 000
-
-                         ____________________________________________
-
-.       ////////////////////////////////////////////////////    
-Submenu portateis:
-                            Computadores portateis
- Numero total de portateis - 000                         Numero total de requisicoes efetuadas - 000
- Numero de portateis disponiveis - 000                   Numero de requisicoes ativas - 000
-
-                         ____________________________________________
-
- I - Inserir portatil
- A - Alterar dados de um portatil
- M - Mostrar dados dos portateis
- V - Voltar
-            Opcao ->
-
 .       ////////////////////////////////////////////////////
 
 funções:
@@ -32,11 +9,11 @@ funções:
  (done)     D->Adicionar dados sobre a avaria/reparacao de um portatil      //Adicionar avaria de um portatil
  (done)     P->Mostrar avarias                                              //Lista as avarias dos portateis que existem
 
- (    )     A->Adicionar requisicao                                         // Adicionar uma requisicao de um portatil
- (    )     R->Renovar a requisicao                                         // Aumentar a data final de uma requisicao
- (    )     D->Fazer a Devolucao                                            // Mudar o estado de uma requisicao para concluido(0)
- (    )     P->Pesquisar dados sobre uma requisicao                         // Pesquisar sobre uma requisicao por numero ou nome (not case sensitive)
- (    )     M->Mostrar dados das requisicoes                                //Lista todas as requisicoes e todas as suas informacoes
+ (done)     A->Adicionar requisicao                                         // Adicionar uma requisicao de um portatil
+ (done)     R->Renovar a requisicao                                         // Aumentar a data final de uma requisicao
+ (done)     D->Fazer a Devolucao                                            // Mudar o estado de uma requisicao para concluido(0)
+ (done)     P->Pesquisar dados sobre uma requisicao                         // Pesquisar sobre uma requisicao por numero ou nome (not case sensitive)
+ (done)     M->Mostrar dados das requisicoes                                //Lista todas as requisicoes e todas as suas informacoes
 
 
  (done)     B->Gravar em ficheiro binário                                   //grava ficheiro binario em portateis.dat
@@ -53,8 +30,8 @@ funções:
 ////////////////////////////////////////////////////
 • Inserir e listar a informação referente a todos os portáteis. (not done)
  (done)     a quantidade de avarias
- (    )     a quantidade de requisições
- (    )     a informação (tipo de utente, prazo de requisição) de cada uma das suas requisições.
+ (done)     a quantidade de requisições
+ (done)     a informação (tipo de utente, prazo de requisição) de cada uma das suas requisições.
 ////////////////////////////////////////////////////
 • Registar a alteração da localização de um computador portátil. (all done)
 ////////////////////////////////////////////////////
@@ -62,30 +39,30 @@ funções:
 ////////////////////////////////////////////////////
 • Listar os dados de todas as requisições. (not done)
  Para cada requisição concluída deverão também ser mostrados
- (    )     a duração (em dias) da requisição do portátil
- (    )     o campus em que foi devolvido
- (    )     o valor da multa paga
+ (done)     a duração (em dias) da requisição do portátil
+ (done)     o campus em que foi devolvido
+ (done)     o valor da multa paga
 ////////////////////////////////////////////////////
 • Registar a devolução de um computador portátil previamente requisitado. (not done)
- (    )     toda a informação da requisição
- (    )     acrescida do processador e da memória RAM do portátil deverá ser acrescentada num log (em ficheiro de texto)
+ (done)     toda a informação da requisição
+ (done)     acrescida do processador e da memória RAM do portátil deverá ser acrescentada num log (em ficheiro de texto)
 ////////////////////////////////////////////////////
-• Renovar a requisição de um computador portátil. (not done)
+• Renovar a requisição de um computador portátil. (done)
 ////////////////////////////////////////////////////
-• Registar a avaria/reparação de um computador portátil. (not done)
+• Registar a avaria/reparação de um computador portátil. (done)
 ////////////////////////////////////////////////////
-• Armazenar (e ler) em ficheiro(s) binário(s). (half done)
+• Armazenar (e ler) em ficheiro(s) binário(s). (done)
 ////////////////////////////////////////////////////
-• Apresentar a informação de uma requisição (selecionada pelo utilizador). (not done)
- (    )     designação
- (    )     estado
- (    )     quantidade total de dias requisitado
+• Apresentar a informação de uma requisição (selecionada pelo utilizador). (done)
+ (done)     designação
+ (done)     estado
+ (done)     quantidade total de dias requisitado
 ////////////////////////////////////////////////////
-• Apresentar os seguintes dados estatísticos: (not done)
+• Apresentar os seguintes dados estatísticos: (done)
  (done)     percentagem de portáteis com cada tipo de processador
  (done)     o custo médio de cada multa paga
- (    )     tipo(s) de utente(s) com a menor quantidade de requisições efetuadas
- (    )     devolução(ões) mais recente(s)
+ (done)     tipo(s) de utente(s) com a menor quantidade de requisições efetuadas
+ (done)     devolução(ões) mais recente(s)
 ////////////////////////////////////////////////////
 • Apresentar uma listagem de todas as avarias ocorridas contendo a seguinte informação: (not done)
  (done)     dados do portátil

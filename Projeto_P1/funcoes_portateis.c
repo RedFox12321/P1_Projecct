@@ -22,6 +22,7 @@ void adicionarPortatil(dadosPortatil arrayPortateis[MAX_PORTATEIS], int *numPort
     arrayPortateis[*numPortateis].estado.avaria = 0;
     arrayPortateis[*numPortateis].numAvarias = 0;
     arrayPortateis[*numPortateis].numRequisicoes = 0;
+    arrayPortateis[*numPortateis].diasTotal = 0;
     (*numPortateis)++;
 }
 

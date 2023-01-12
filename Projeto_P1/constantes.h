@@ -48,6 +48,7 @@ typedef struct{
     estadoPortatil estado; //estado do portatil, como tambem o tipo de avaria;
     int numRequisicoes; //quantidade de requisicoes totais
     int numAvarias; //quantidade de avarias totais
+    int diasTotal; //quantidade de dias que esteve requisitado no total
 } dadosPortatil;
 
 typedef struct{
@@ -67,6 +68,7 @@ typedef struct{
     int prazo; //prazo da devolucao em dias
     int estado; //concluida = 0; ativa = 1;
     float multa; //valor da multa a pagar
-} dadosRequisisao;
+    int recente; //devolucao mais recente nao=0;sim=1
+} dadosRequisicao;
 
 #endif // CONSTANTES_H_INCLUDED

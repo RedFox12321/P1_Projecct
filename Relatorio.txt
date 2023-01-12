@@ -1,0 +1,83 @@
+
+.       ////////////////////////////////////////////////////
+
+#Estruturas:
+
+    #data:
+        int dia;
+        int mes;
+        int ano;
+
+ ////////////////////////////////////////////////////
+    
+    #estadoPortatil:
+        int estado;                                                 //disponivel = 0; avariado = 1; requisitado = -1
+        int avaria;                                                 //temporaria = 0; permanente = 1;
+
+ ////////////////////////////////////////////////////
+
+    #partesPortatil:
+        int nIdentif;                                               //numero de indentificacao do portatil
+        char SerialNum[];        //vetor de 15(+'/0') caracteres    // designacao do computador, como numero de serie
+        int CPU;                                                    //nome do processador
+        int RAM;                                                    //memória total do portatil(valor entre 1GB e 64GB)
+        char localizacao[];      //vetor de 11(+'/0') caracteres    //localizacao onde foi adicionado
+        data dataAquisicao;                                         //data de aquisicao do portatil
+        float valor;                                                //valor do portatil
+
+ ////////////////////////////////////////////////////
+
+    #dadosPortatil:
+        partesPortatil dataPortatil;                                //data sobre o portatil
+        estadoPortatil estado;                                      //estado do portatil, como tambem o tipo de avaria;
+        int numRequisicoes;                                         //quantidade de requisicoes totais
+        int numAvarias;                                             //quantidade de avarias totais
+        int diasTotal;                                              //quantidade de dias que esteve requisitado no total
+
+ ////////////////////////////////////////////////////
+
+    #dadosAvaria:
+        partesPortatil dataPortatil;                                //data sobre o portatil
+        estadoPortatil avaria;                                      //data estado muda para -> ativo = 1; nao ativo = 0
+        data dataAvaria;                                            //data de quando aconteceu a avaria
+        int diasAvariado;                                           //Dias avariado, se temporario
+
+    #dadosRequisisao:
+        int nIdentif;                                               //numero de indentificacao do portatil
+        char codigo[];           //vetor de 9(+'/0') caracteres     //codigo da requisicao
+        char nomeUtente[];       //vetor de 79(+'/0') caracteres    //nome do utente que fez a requisicao
+        char tipoUtente[];       //vetor de 22(+'/0') caracteres    //tipo de utente
+        data dataRequisicao;                                        //data da requisicao
+        data dataDevolucao;                                         //data da devolucao
+        int prazo;                                                  //prazo da devolucao em dias
+        int estado;                                                 //concluida = 0; ativa = 1;
+        float multa;                                                //valor da multa a pagar
+        int recente;                                                //devolucao mais recente: nao=0; sim=1
+
+.       ////////////////////////////////////////////////////
+
+#Funções por acabar:
+  - Todas as funções pedidas foram criadas (daquilo que interpretamos do enunciado)
+
+.       ////////////////////////////////////////////////////
+
+#Decisões:
+    - As avarias e requisicoes podem ter qualquer data entre a aquisicao do computador e o fim do ano 
+      maximo porque pressupomos que poderiam haver avarias ou requisicoes não identificadas anteriormente.
+    - Os dias totais que um portatil tem como requisitado só aumentam quando termina a requisicao
+      pois o utente pode entregar antes ou depois do prazo.
+    - A designação foi referida como numero de serie do portatil porque seria único para cada
+      portatil, mas este também pode ser trocado por uma designação do portatil, por exemplo
+      "Asus i5" ou "Lenovo 8GB", podendo haver dois portateis com a mesma designacao.
+    - Ao registar uma avaria/reparacao decidimos que o programa deveria proceder consuante o estado
+      do portatil e perguntar por comfirmação, do que ser o utilizador a escolher se avariou ou
+      foi reparado.
+    - As avarias permanentes ou ainda por reparar têm sempre 0 dias de avaria, porque pensamos que,
+      para qualquer havaria que esteja "ativa", não se sabe quantos dias esteve avariado até
+      ser registado a reparacao.
+    - Demos a liberdade ao utilizador de escolher o codigo das requisicoes (desde que este nao esteja
+      em uso) porque seria mais facil de lembrar ou decorar. Ainda assim, é sempre mostrado uma
+      tabela com as requisicoes existentes.
+    - Não é possivel alterar os dados dos portateis enquanto estiverem avariados ou requisitados.
+      No caso de haver uma alteração nos componentes do portatil durante uma avaria esta só pode
+      ser identificada depois de registar a avaria.

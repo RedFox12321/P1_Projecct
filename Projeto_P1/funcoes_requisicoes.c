@@ -7,71 +7,74 @@
 #include "funcoes_portateis.h"
 #include "funcoes_requisicoes.h"
 
-dadosRequisisao *efetuarRequisicao(dadosPortatil arrayPortateis[MAX_PORTATEIS], int numPortateis, dadosRequisisao arrayRequisicao[], int *numRequisicoes, int *numPD, int *numRA)
+dadosRequisicao *efetuarRequisicao(dadosPortatil arrayPortateis[MAX_PORTATEIS], int numPortateis, dadosRequisicao arrayRequisicoes[], int *numRequisicoes, int *numPD, int *numRA)
 {
-    int pos;
-    dadosRequisisao *backup;
-    backup = arrayRequisicao;
-    arrayRequisicao = realloc(arrayRequisicao, (*numRequisicoes+1)*sizeof(dadosRequisisao));
-    if(arrayRequisicao==NULL)
+    int pos, posReq;
+    char codigo[MAX_CODIGO];
+    dadosRequisicao *backup;
+    backup = arrayRequisicoes;
+    arrayRequisicoes = realloc(arrayRequisicoes, (*numRequisicoes+1)*sizeof(dadosRequisicao));
+    if(arrayRequisicoes==NULL)
     {
-        arrayRequisicao = backup;
+        arrayRequisicoes = backup;
         printf("\nErro ao reservar memoria para adicionar requisicao\n");
     }
     else
     {
-
-        mostrarDadosPortateis(arrayPortateis, numPortateis);
-        pos = pedirPosicao(arrayPortateis,numPortateis);
-        switch(arrayPortateis[pos].estado.estado)
+        do
         {
-        case 0:                                                            //no caso de estado "disponivel"
+            mostrarDadosPortateis(arrayPortateis, numPortateis);
+            pos = pedirPosicao(arrayPortateis,numPortateis);
+            if(arrayPortateis[pos].estado.estado==-1)
+            {
+                printf("\nNao e possivel requisitar o portatil, pois foi requisitado anteriormente.\n");    //no caso de estado "requisitado"
+            }
+            if(arrayPortateis[pos].estado.estado==1)
+            {
+                printf("\nNao e possivel requisitar o portatil, pois apresenta estar avariado.\n");         //no caso de estado "avariado"
+            }
+        }
+        while(arrayPortateis[pos].estado.estado==-1 || arrayPortateis[pos].estado.estado==1);
             do
             {
-                if(arrayPortateis[pos].estado.estado==-1)
-                {
-                    printf("\nEste portatil ja se encontra requisitado por outro utente!\n");
+                lerString("\nCodigo da Requisicao: ", codigo, MAX_CODIGO);
+                posReq = procuraCodigo(arrayRequisicoes, *numRequisicoes, codigo);
+                if(posReq!=-1){
+                    printf("\n Ja existe uma requisicao com este codigo!\n");
                 }
             }
-            while(arrayPortateis[pos].estado.estado==-1);
+            while(posReq!=-1);
 
+            strcpy(arrayRequisicoes[*numRequisicoes].codigo, codigo);
             arrayPortateis[pos].estado.estado = -1;
-            arrayRequisicao[*numRequisicoes].estado= 1;
-            arrayRequisicao[*numRequisicoes].nIdentif=arrayPortateis[pos].dataPortatil.nIdentif;
-            lerString("\nCodigo da Requisicao: ",arrayRequisicao[*numRequisicoes].codigo,MAX_CODIGO);
-            lerString("\nNome do Utente Requisitante: ",arrayRequisicao[*numRequisicoes].nomeUtente,MAX_NAME_CHARACTERS);
-            escolherTipoUtente(arrayRequisicao[*numRequisicoes].tipoUtente);
-            arrayRequisicao[*numRequisicoes].dataRequisicao=pedirData("\nData do Inicio da Requisicao: ",2010,1,1);
-            arrayRequisicao[*numRequisicoes].prazo=lerInteiro("Por quantos dias sera requisitado:",1,30);
-            arrayRequisicao[*numRequisicoes].multa=0.0;
+            arrayRequisicoes[*numRequisicoes].estado=1;
+            arrayRequisicoes[*numRequisicoes].recente=0;
+            arrayRequisicoes[*numRequisicoes].nIdentif=arrayPortateis[pos].dataPortatil.nIdentif;
+            lerString("\nNome do Utente Requisitante: ",arrayRequisicoes[*numRequisicoes].nomeUtente,MAX_NAME_CHARACTERS);
+            escolherTipoUtente(arrayRequisicoes[*numRequisicoes].tipoUtente);
+            arrayRequisicoes[*numRequisicoes].dataRequisicao=pedirData("\nData do Inicio da Requisicao: ",arrayPortateis[pos].dataPortatil.dataAquisicao.ano,arrayPortateis[pos].dataPortatil.dataAquisicao.mes,arrayPortateis[pos].dataPortatil.dataAquisicao.dia);
+            arrayRequisicoes[*numRequisicoes].prazo=lerInteiro("Por quantos dias sera requisitado:",1,30);
+            arrayRequisicoes[*numRequisicoes].multa=0.0;
             arrayPortateis[pos].numRequisicoes++;
             (*numRequisicoes)++;
             (*numPD)--;
             (*numRA)++;
             printf("\nEstado trocado com sucesso.\n");
-            break;
-        case 1:                                                            //no caso de estado "avariado"
-            printf("\nNao e possivel requisitar o portatil, pois apresenta estar avariado.\n");
-            break;
-        case -1:                                                            //no caso de estado "requisitado"
-            printf("\nNao e possivel requisitar o portatil, pois foi requisitado anteriormente.\n");
-            break;
-        }
     }
-    return arrayRequisicao;
+    return arrayRequisicoes;
 }
 
-void mostrarDadosRequisicao(dadosRequisisao arrayRequisicao[], int numRequisicoes)
+void mostrarDadosRequisicao(dadosRequisicao arrayRequisicoes[], int numRequisicoes)
 {
     int i;
-    printf("\nNumero   Cod. Requisicao\tRequisitante\tTipo Utente           \tQuando comecou: dia/mes/ano\tDias Requisitados\tEstado:\n");
+    printf("\nNumero   Cod. Requisicao\tRequisitante\t      Tipo Utente      \tData de requisicao\tDias Requisitados\tEstado\n");
     for(i=0; i<numRequisicoes; i++)
     {
 
-        printf("%5i    %15s\t%12s\t%22s\t\t %02d/%02d/%4d\t%12d dias\t", arrayRequisicao[i].nIdentif, arrayRequisicao[i].codigo, arrayRequisicao[i].nomeUtente,
-               arrayRequisicao[i].tipoUtente, arrayRequisicao[i].dataRequisicao.dia,arrayRequisicao[i].dataRequisicao.mes,arrayRequisicao[i].dataRequisicao.ano
-               ,arrayRequisicao[i].prazo);
-        switch(arrayRequisicao[i].estado)
+        printf("%5i    %15s\t%12s\t%16s\t       %02d/%02d/%4d\t%12d dias\t", arrayRequisicoes[i].nIdentif, arrayRequisicoes[i].codigo, arrayRequisicoes[i].nomeUtente,
+               arrayRequisicoes[i].tipoUtente, arrayRequisicoes[i].dataRequisicao.dia,arrayRequisicoes[i].dataRequisicao.mes,arrayRequisicoes[i].dataRequisicao.ano
+               ,arrayRequisicoes[i].prazo);
+        switch(arrayRequisicoes[i].estado)
         {
         case 0:
             printf("Concluida\n");
@@ -82,43 +85,96 @@ void mostrarDadosRequisicao(dadosRequisisao arrayRequisicao[], int numRequisicoe
     }
 }
 
-int ProcurarRequisicaoAtiva(dadosRequisisao arrayRequisicao[], int numRequisicoes)
+int procurarRequisicaoAtiva(dadosRequisicao arrayRequisicoes[], int numRequisicoes)
 {
-    char pesquisa[MAX_CODIGO];
-    int i,pos,renovacao;
+    int i,pos=-1,renovacao;
+    char codigo[MAX_CODIGO];
 
-    mostrarDadosRequisicao(arrayRequisicao,numRequisicoes);
-
-    pos=-1;
-    lerString("\nDigite o Codigo da Requisicao: ",pesquisa,MAX_CODIGO);
-
+    lerString("\nDigite o Codigo da Requisicao: ", codigo, MAX_CODIGO);
     for(i=0; i<numRequisicoes; i++)
     {
-        if(strcmp(pesquisa, arrayRequisicao[i].codigo)==0 && arrayRequisicao[i].estado==1)
+        if(strcmp(codigo, arrayRequisicoes[i].codigo)==0 && arrayRequisicoes[i].estado==1)
         {
             pos=i;
             i=numRequisicoes;
         }
     }
     return pos;
-
-
 }
 
-void RenovarRequisicao(dadosRequisisao arrayRequisicao[], int numRequisicoes)
+void renovarRequisicao(dadosRequisicao arrayRequisicoes[], int numRequisicoes)
 {
-    int pos,renovacao;
+    int pos;
+    mostrarDadosRequisicao(arrayRequisicoes,numRequisicoes);
     do
     {
-        pos=ProcurarRequisicaoAtiva(arrayRequisicao, numRequisicoes);
+        pos=procurarRequisicaoAtiva(arrayRequisicoes, numRequisicoes);
         if(pos==-1)
         {
             printf("\nNao existe nenhuma requisicao ativa com este codigo.\n");
         }
     }
     while(pos==-1);
-    renovacao=lerInteiro("Por quanto tempo pretende renovar a requisicao?",1,7);
-    arrayRequisicao[pos].prazo+=renovacao;
+    arrayRequisicoes[pos].prazo+=lerInteiro("Por quanto tempo pretende renovar a requisicao?",1,7);
+}
+
+void efetuarDevolucao(dadosRequisicao arrayRequisicoes[], dadosPortatil arrayPortateis[MAX_PORTATEIS], int numRequisicoes, int numPortateis)
+{
+    int i, posReq;
+    mostrarDadosRequisicao(arrayRequisicoes,numRequisicoes);
+    do
+    {
+        posReq = procurarRequisicaoAtiva(arrayRequisicoes, numRequisicoes);
+        if(posReq==-1)
+        {
+            printf("\nNao existe nenhuma requisicao ativa com este codigo.\n");
+        }
+    }
+    while(posReq==-1);
+    registarRequisicao_Log(arrayRequisicoes, arrayPortateis, numRequisicoes, numPortateis, posReq);
+}
+
+int pesquisarRequisicao(dadosRequisicao arrayRequisicoes[], dadosPortatil arrayPortateis[MAX_PORTATEIS], int numRequisicoes, int numPortateis)
+{
+    int pos, posReq;
+    char codigo[MAX_CODIGO];
+    mostrarDadosRequisicao(arrayRequisicoes, numRequisicoes);
+    do
+    {
+        lerString("\nCodigo da Requisicao:",codigo,MAX_CODIGO);
+        posReq = procuraCodigo(arrayRequisicoes, numRequisicoes, codigo);
+        if(posReq==-1)
+        {
+            printf("Nao existe requisicao com esse codigo de identificacao.\n");
+        }
+    }
+    while(posReq==-1);
+    pos = procuraPortatil(arrayPortateis, numPortateis, arrayRequisicoes[posReq].nIdentif);
+    printf("\n\t___Dados da Requisicao___\n"
+           "Numero de Identidficacao: %d\n"
+           "Processador(CPU): Intel i%d\n"
+           "Memoria(RAM): %d GB\n"
+           "Codigo: %s\n"
+           "Utente: %s\n"
+           "Nome do utente: %s\n"
+           "Requisitado por: %d dias\n"
+           "Data de requisicao: %02d/%02d/%4d\n",
+           arrayRequisicoes[posReq].nIdentif, arrayPortateis[pos].dataPortatil.CPU, arrayPortateis[pos].dataPortatil.RAM ,arrayRequisicoes[posReq].codigo, arrayRequisicoes[posReq].tipoUtente, arrayRequisicoes[posReq].nomeUtente,
+           arrayRequisicoes[posReq].prazo ,arrayRequisicoes[posReq].dataRequisicao.dia, arrayRequisicoes[posReq].dataRequisicao.mes, arrayRequisicoes[posReq].dataRequisicao.ano);
+    if(arrayRequisicoes[posReq].estado==0)
+    {
+        printf("Data de devolucao: %02d/%02d/%4d\n"
+               "Multa: %.2f Euros\n",
+               arrayRequisicoes[posReq].dataDevolucao.dia, arrayRequisicoes[posReq].dataDevolucao.mes, arrayRequisicoes[posReq].dataDevolucao.ano, arrayRequisicoes[posReq].multa);
+    }
+    switch(arrayRequisicoes[posReq].estado)
+    {
+    case 0:
+        printf("Estado: Devolvido\n");
+        break;
+    case 1:
+        printf("Estado: Requisitado\n");
+    }
 }
 
 void escolherTipoUtente(char tipo[MAX_UTENTE])
